@@ -1,7 +1,7 @@
 from data.orm import SyncORM
 from flask import Flask, request, render_template, jsonify
 from flask_cors import CORS
-from flasgger import Flasgger, swag_from
+from flasgger import Flasgger, swag_from, Swagger
 from aiogram import Bot, Dispatcher, Router     
 from bot.config import settings
 import asyncio
@@ -11,7 +11,7 @@ from bot.handlers import rt
 app = Flask(__name__)
 app.config["SWAGGER"] = {"title": "Мой API", "uiversion": 3}
 
-flasgger = Flasgger(app)
+Swagger(app)
 CORS(app)
 
 SyncORM.create_table()
@@ -25,14 +25,15 @@ SyncORM.insert_data()
 
 
 @app.route('/get_user_history', methods=['GET'])
-@swag_from("users.yml")
+@swag_from('swagger/get_user_history.yaml')
 def get_user_history():
     lender_tg = request.args.get('lender_tg')
     debtor_tg = request.args.get('debtor_tg')
     return jsonify(SyncORM.get_user_history(lender_tg, debtor_tg))
 
 
-@app.route('/get_user_debtors', methods=['GET'])
+@app.route('/get_user_debts', methods=['GET'])
+@swag_from('swagger/get_user_debts.yaml')
 def get_user_debts():
     lender_tg = request.args.get('lender_tg')
     return jsonify(SyncORM.get_user_debtors(lender_tg))
@@ -43,7 +44,14 @@ def get_user_lenders():
     return jsonify(SyncORM.get_user_lenders(debtor_tg))
 
 
+@app.route('/get_user_lenders', methods=['GET'])
+def get_user_lenders():
+    debtor_tg = request.args.get('deptor_tg')
+    return jsonify(SyncORM.get_user_lenders(debtor_tg))
+
+
 @app.route('/insert_debt', methods=['POST'])
+@swag_from('swagger/insert_debt.yaml')
 def insert_debt():
     lender_tg = request.args.get('lender_tg')
     debtor_tg = request.args.get('debtor_tg')

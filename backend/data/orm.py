@@ -1,7 +1,7 @@
 from sqlalchemy import select, and_, func, insert, or_, not_
 from data.database import sync_engine, session_factory, Base
 from data.models import DebtsHistoryORM
-from bot.handlers import send_notification
+# from bot.handlers import send_notification
 
 
 class SyncORM:
@@ -116,11 +116,19 @@ class SyncORM:
 
     
     @staticmethod
+    def get_user_lenders(debtor_tg):
+        with session_factory() as session:
+            query = select(DebtsHistoryORM.f_tg_tag_lender).where(DebtsHistoryORM.f_tg_tag_debtor == debtor_tg)
+            res = session.execute(query).all()
+            return list(map(lambda x: x.f_tg_tag_lender, res))
+    
+    
+    @staticmethod
     def insert_debt(lender_tg, debtors_tg_debpt_dict, event_name, event_date):
         with session_factory() as session:
             for debtor, amount in debtors_tg_debpt_dict:
                 create = DebtsHistoryORM(f_tg_tag_lender=lender_tg, f_tg_tag_debtor=debtor, f_debt_amount=amount, f_event_name=event_name, f_event_date=event_date)
                 session.add(create)
-                send_notification(debtor=debtor, lender_tg=lender_tg, event_name=event_name, event_date=event_date)
+                #send_notification(debtor=debtor, lender_tg=lender_tg, event_name=event_name, event_date=event_date)
 
             session.commit()
