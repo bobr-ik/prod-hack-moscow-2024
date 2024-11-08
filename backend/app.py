@@ -1,12 +1,12 @@
 from data.orm import SyncORM
 from flask import Flask, request, render_template, jsonify
 from flask_cors import CORS
-from flasgger import Flasgger, swag_from
+from flasgger import Flasgger, swag_from, Swagger
 
 app = Flask(__name__)
 app.config["SWAGGER"] = {"title": "Мой API", "uiversion": 3}
 
-flasgger = Flasgger(app)
+Swagger(app)
 CORS(app)
 
 SyncORM.create_table()
@@ -20,7 +20,7 @@ SyncORM.insert_data()
 
 
 @app.route('/get_user_history', methods=['GET'])
-@swag_from("users.yml")
+@swag_from('swagger/get_user_history.yaml')
 def get_user_history():
     lender_tg = request.args.get('lender_tg')
     debtor_tg = request.args.get('debtor_tg')
@@ -28,12 +28,14 @@ def get_user_history():
 
 
 @app.route('/get_user_debts', methods=['GET'])
+@swag_from('swagger/get_user_debts.yaml')
 def get_user_debts():
     lender_tg = request.args.get('lender_tg')
     return jsonify(SyncORM.get_user_debts(lender_tg))
 
 
 @app.route('/insert_debt', methods=['POST'])
+@swag_from('swagger/insert_debt.yaml')
 def insert_debt():
     lender_tg = request.args.get('lender_tg')
     debtor_tg = request.args.get('debtor_tg')

@@ -1,0 +1,75 @@
+summary: Добавить новый долг
+description: Создаёт новый долг между пользователем (кредитором) и должником.
+parameters:
+  - name: lender_tg
+    in: query
+    description: Telegram ID кредитора
+    required: true
+    schema:
+      type: string
+  - name: debtor_tg
+    in: query
+    description: Telegram ID должника
+    required: true
+    schema:
+      type: string
+  - name: amount
+    in: query
+    description: Сумма долга
+    required: true
+    schema:
+      type: number
+      format: float
+  - name: event_name
+    in: query
+    description: Название события, связанного с долгом (например, "заем" или "оплата")
+    required: true
+    schema:
+      type: string
+  - name: event_date
+    in: query
+    description: Дата события в формате YYYY-MM-DD
+    required: true
+    schema:
+      type: string
+      format: date
+responses:
+  200:
+    description: Долг успешно добавлен
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+              example: true
+            message:
+              type: string
+              example: "Debt successfully inserted"
+  400:
+    description: Ошибка запроса, например, отсутствие обязательных параметров
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+              example: false
+            error:
+              type: string
+              example: "Missing required parameters"
+  500:
+    description: Внутренняя ошибка сервера
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+              example: false
+            error:
+              type: string
+              example: "Internal server error"
