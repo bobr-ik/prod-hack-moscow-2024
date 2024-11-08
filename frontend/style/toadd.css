@@ -13,8 +13,12 @@ header {
     .icon {
         width: 20vw;
         height: 10vh;
+        z-index: 10;
 
-        background-color: red;
+        background-image: url("Капибара\ svg.svg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
     }
 
     .title {
