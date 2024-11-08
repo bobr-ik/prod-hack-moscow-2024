@@ -18,7 +18,7 @@ class SyncORM:
     {
         "f_tg_tag_debtor": "@ivan",
         "f_tg_tag_lender": "@petr",
-        "f_debt_amount": 100
+        "f_debt_amount": 150
     },
     {
         "f_tg_tag_debtor": "@ivan",
@@ -74,12 +74,18 @@ class SyncORM:
     @staticmethod
     def get_user_debts(lender_tg):
         with session_factory() as session:
-            query = select(DebtsHistoryORM.f_tg_tag_debtor, func.sum(DebtsHistoryORM.f_debt_amount).label('debt_amount')).where(DebtsHistoryORM.f_tg_tag_lender == lender_tg).group_by(DebtsHistoryORM.f_tg_tag_debtor)
+            subq = select(DebtsHistoryORM.f_tg_tag_debtor.label('tg_tag_debtor'), func.sum(DebtsHistoryORM.f_debt_amount).label('debt_amount')).where(DebtsHistoryORM.f_tg_tag_lender == lender_tg).group_by(DebtsHistoryORM.f_tg_tag_debtor).subquery()
+            subq1 = select(DebtsHistoryORM.f_tg_tag_lender.label('tg_tag_lender'), func.sum(DebtsHistoryORM.f_debt_amount).label('debt_amount')).where(DebtsHistoryORM.f_tg_tag_debtor == lender_tg).group_by(DebtsHistoryORM.f_tg_tag_lender).subquery()
+
+            query = select(subq.c.tg_tag_debtor, (subq.c.debt_amount-subq1.c.debt_amount).label('debt_amount'))
+            # .where(and_(subq.c.tg_tag_debtor == lender_tg, subq1.c.tg_tag_lender == lender_tg)
+            # query = select(subq1.c.tg_tag_lender, subq1.c.debt_amount)
             res = session.execute(query).all()
-            return list(map(lambda x: {'debtor_tg': x.f_tg_tag_debtor,'amount': x.debt_amount}, res))
+            print(res)
+            return list(map(lambda x: {'debtor_tg': x.tg_tag_debtor,'amount': x.debt_amount}, res))
             
 
-
+    
     @staticmethod
     def insert_debt(lender_tg, debtors_tg_debpt_dict, event_name, event_date):
         with session_factory() as session:
@@ -89,6 +95,3 @@ class SyncORM:
                 send_notification(debtor=debtor, lender_tg=lender_tg, event_name=event_name, event_date=event_date)
 
             session.commit()
-    
-    
-    
