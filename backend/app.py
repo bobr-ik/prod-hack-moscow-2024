@@ -34,6 +34,12 @@ def get_user_debts():
     return jsonify(SyncORM.get_user_debts(lender_tg))
 
 
+@app.route('/get_user_lenders', methods=['GET'])
+def get_user_lenders():
+    debtor_tg = request.args.get('deptor_tg')
+    return jsonify(SyncORM.get_user_lenders(debtor_tg))
+
+
 @app.route('/insert_debt', methods=['POST'])
 @swag_from('swagger/insert_debt.yaml')
 def insert_debt():
