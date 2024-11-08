@@ -32,10 +32,15 @@ def get_user_history():
     return jsonify(SyncORM.get_user_history(lender_tg, debtor_tg))
 
 
-@app.route('/get_user_debts', methods=['GET'])
+@app.route('/get_user_debtors', methods=['GET'])
 def get_user_debts():
     lender_tg = request.args.get('lender_tg')
-    return jsonify(SyncORM.get_user_debts(lender_tg))
+    return jsonify(SyncORM.get_user_debtors(lender_tg))
+
+@app.route('/get_user_lenders', methods=['GET'])
+def get_user_lenders():
+    debtor_tg = request.args.get('debtor_tg')
+    return jsonify(SyncORM.get_user_lenders(debtor_tg))
 
 
 @app.route('/insert_debt', methods=['POST'])
@@ -55,5 +60,5 @@ async def main():
     await dp.start_polling(bot)
 
 if __name__ == '__main__':
-    asyncio.run(main())
     app.run(host='0.0.0.0', port=5000)
+    asyncio.run(main())

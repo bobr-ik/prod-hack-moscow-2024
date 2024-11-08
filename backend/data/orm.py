@@ -1,4 +1,4 @@
-from sqlalchemy import select, and_, func, insert
+from sqlalchemy import select, and_, func, insert, or_, not_
 from data.database import sync_engine, session_factory, Base
 from data.models import DebtsHistoryORM
 from bot.handlers import send_notification
@@ -72,18 +72,47 @@ class SyncORM:
             return []
 
     @staticmethod
-    def get_user_debts(lender_tg):
+    def get_user_debtors(lender_tg):
+        # -> tg должников и сумма
         with session_factory() as session:
+            # кто должен lender_tg и сколько
             subq = select(DebtsHistoryORM.f_tg_tag_debtor.label('tg_tag_debtor'), func.sum(DebtsHistoryORM.f_debt_amount).label('debt_amount')).where(DebtsHistoryORM.f_tg_tag_lender == lender_tg).group_by(DebtsHistoryORM.f_tg_tag_debtor).subquery()
+            subq_res = {elem[0]: elem[1] for elem in session.execute(select(subq)).all()}
+            # кому должен lender_tg и сколько
             subq1 = select(DebtsHistoryORM.f_tg_tag_lender.label('tg_tag_lender'), func.sum(DebtsHistoryORM.f_debt_amount).label('debt_amount')).where(DebtsHistoryORM.f_tg_tag_debtor == lender_tg).group_by(DebtsHistoryORM.f_tg_tag_lender).subquery()
+            # вычитание тех, кого можно вычесть
+            subq2 = select(subq.c.tg_tag_debtor, (subq.c.debt_amount-subq1.c.debt_amount).label('debt_amount')).where(or_(and_(subq.c.tg_tag_debtor == subq1.c.tg_tag_lender, subq.c.debt_amount-subq1.c.debt_amount > 0), not_(subq.c.tg_tag_debtor.in_(subq_res.keys())))).subquery()
+            subq2_res = {elem[0]: elem[1] for elem in session.execute(select(subq2)).all()}
+            #красотаааааа
+            ans = []
+            for elem in subq_res.keys():
+                if elem in subq2_res:
+                    ans.append({'debtor_tg': elem, 'amount': subq2_res[elem]})
+                else:
+                    ans.append({'debtor_tg': elem, 'amount': subq_res[elem]})
+            return ans
+        
 
-            query = select(subq.c.tg_tag_debtor, (subq.c.debt_amount-subq1.c.debt_amount).label('debt_amount'))
-            # .where(and_(subq.c.tg_tag_debtor == lender_tg, subq1.c.tg_tag_lender == lender_tg)
-            # query = select(subq1.c.tg_tag_lender, subq1.c.debt_amount)
-            res = session.execute(query).all()
-            print(res)
-            return list(map(lambda x: {'debtor_tg': x.tg_tag_debtor,'amount': x.debt_amount}, res))
-            
+    @staticmethod
+    def get_user_lenders(debtor_tg):
+        # -> tg кому должен и сумма
+        with session_factory() as session:
+            # кто должен debter_tg и сколько
+            subq = select(DebtsHistoryORM.f_tg_tag_debtor.label('tg_tag_debtor'), func.sum(DebtsHistoryORM.f_debt_amount).label('debt_amount')).where(DebtsHistoryORM.f_tg_tag_lender == debtor_tg).group_by(DebtsHistoryORM.f_tg_tag_debtor).subquery()
+            # кому должен debter_tg и сколько
+            subq1 = select(DebtsHistoryORM.f_tg_tag_lender.label('tg_tag_lender'), func.sum(DebtsHistoryORM.f_debt_amount).label('debt_amount')).where(DebtsHistoryORM.f_tg_tag_debtor == debtor_tg).group_by(DebtsHistoryORM.f_tg_tag_lender).subquery()
+            subq_res = {elem[0]: elem[1] for elem in session.execute(select(subq1)).all()}
+            # вычитание тех, кого можно вычесть
+            subq2 = select(subq.c.tg_tag_debtor, (subq1.c.debt_amount - subq.c.debt_amount).label('debt_amount')).where(or_(and_(subq.c.tg_tag_debtor == subq1.c.tg_tag_lender, subq1.c.debt_amount - subq.c.debt_amount > 0))).subquery()
+            subq2_res = {elem[0]: elem[1] for elem in session.execute(select(subq2)).all()}
+            #красотаааааа
+            ans = []
+            for elem in subq_res.keys():
+                if elem in subq2_res:
+                    ans.append({'debtor_tg': elem, 'amount': subq2_res[elem]})
+                else:
+                    ans.append({'debtor_tg': elem, 'amount': subq_res[elem]})
+            return ans
 
     
     @staticmethod
