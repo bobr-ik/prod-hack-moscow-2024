@@ -1,6 +1,12 @@
 from data.orm import SyncORM
 from flask import Flask, request, render_template, jsonify
 from flask_cors import CORS
+from aiogram import Bot, Dispatcher, Router     
+from bot.config import settings
+import asyncio
+from aiogram.types import Message
+from aiogram.filters.command import CommandStart
+from bot.handlers import rt
 
 app = Flask(__name__)
 CORS(app)
@@ -37,5 +43,13 @@ def insert_debt():
     event_date = request.args.get('event_date')
     return jsonify(SyncORM.insert_debt(lender_tg, debtor_tg, amount, event_name, event_date))
 
+dp = Dispatcher()
+bot = Bot(settings.TOKEN)
+
+async def main():
+    dp.include_router(rt)
+    await dp.start_polling(bot)
+
 if __name__ == '__main__':
+    asyncio.run(main())
     app.run(host='0.0.0.0', port=5000)
