@@ -1,6 +1,7 @@
 from sqlalchemy import select, and_, func, insert
 from data.database import sync_engine, session_factory, Base
 from data.models import DebtsHistoryORM
+from bot.handlers import send_notification
 
 
 class SyncORM:
@@ -80,12 +81,14 @@ class SyncORM:
 
 
     @staticmethod
-    def insert_debt(lender_tg, debtor_tg, amount, event_name, event_date):
+    def insert_debt(lender_tg, debtors_tg_debpt_dict, event_name, event_date):
         with session_factory() as session:
-            create = DebtsHistoryORM(f_tg_tag_lender=lender_tg, f_tg_tag_debtor=debtor_tg, f_debt_amount=amount, f_event_name=event_name, f_event_date=event_date)
-            session.add(create)
+            for debtor, amount in debtors_tg_debpt_dict:
+                create = DebtsHistoryORM(f_tg_tag_lender=lender_tg, f_tg_tag_debtor=debtor, f_debt_amount=amount, f_event_name=event_name, f_event_date=event_date)
+                session.add(create)
+                send_notification(debtor=debtor, lender_tg=lender_tg, event_name=event_name, event_date=event_date)
+
             session.commit()
-            return 0
     
     
     
