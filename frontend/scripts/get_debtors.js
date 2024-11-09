@@ -2,11 +2,7 @@ function fetchDebtors() {
     return new Promise((resolve, reject) => {
         // Здесь должен быть ваш код для запроса к базе данных
         // Возвращаем для примера статичные данные
-        resolve([
-            { debtor_tg: 'user1', amount: 100 },
-            { debtor_tg: 'user2', amount: 200 },
-            { debtor_tg: 'user3', amount: 150 }
-        ]);
+        
     });
 }
 
