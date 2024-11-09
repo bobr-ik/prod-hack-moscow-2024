@@ -38,3 +38,9 @@ class TripDebtsORM(Base):
     f_event_name: Mapped[str] = mapped_column(String(50))
     f_event_date: Mapped[datetime] = mapped_column(default=datetime.now(timezone.utc))
 
+
+class Tg_idsORM(Base):
+    __tablename__ = "t_tg_ids"
+    fid: Mapped[int] = mapped_column(primary_key=True)
+    f_tg_id: Mapped[int] 
+    f_username: Mapped[str] = mapped_column(String(50))
