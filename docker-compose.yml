@@ -15,7 +15,7 @@ services:
     healthcheck:
       test: [ "CMD-SHELL", "mysqladmin ping -u bobr2 -p'qwerty123'" ]
       interval: 3s
-      timeout: 1000000000s
+      timeout: 1s
       retries: 10
 
 
@@ -36,7 +36,7 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "80:80"
+      - "82:80"
     depends_on:
       - backend
     networks:
