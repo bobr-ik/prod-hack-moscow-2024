@@ -62,45 +62,63 @@ footer {
     height: 10vh;
     background-color: rgb(255, 220, 0);
 }
-#myButton {
-   margin-left: 40%;}
-.popup {
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,
-            0,
-            0,
-            0.4);
-    display: none;
-}
-
-.popup-content {
-    background-color: white;
-
-    margin: 10% auto;
-    padding: 20px;
-    border: 1px solid #888888;
-    width: 40%;
-    height: 100%;
-    font-weight: bolder;
-
-}
-
-.popup-content button {
-    display: block;
-    margin: 0 auto;
-}
-
-.show {
-    display: block;
-}
 .User_card_wrapper{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
 }
+.card{
+    text-align: center;
+    margin: 10%;
+    font-size: 32px;
+}
+h2{
+    text-align: center;
+    font-size: 45px;
+}
+.pay_button{ 
+    background-color: rgb(255, 220, 0);
+    border-radius: 10px;
+    border: 2px solid white;
+    width: 100px;
+    height: 40px;}
+    .dropbtn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+      }
+      
+      .dropbtn:hover, .dropbtn:focus {
+        background-color: #3e8e41;
+      }
+      
+      .dropdown {
+        float: right;
+        position: relative;
+        display: inline-block;
+      }
+      
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 160px;
+        overflow: auto;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        right: 0;
+        z-index: 1;
+      }
+      
+      .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+      
+      .dropdown a:hover {background-color: #ddd;}
+      
+      .show {display: block;}

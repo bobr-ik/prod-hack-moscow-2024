@@ -10,11 +10,20 @@
 <body>
     <header>
         <div class="icon"></div>
-        <div class="title">Новое мероприятие</div>
+        <div class="title">Заголовок</div>
+        <div class="dropdown">
+            <button onclick="myFunction()" class="dropbtn"> Меню</button>
+            <div id="myDropdown" class="dropdown-content">
+              <a href="owe.html">Ваши долги</a>
+              <a href="debtors.html">Долги друзей</a>
+              <a href="add.html">Новый счет</a>
+              <a href="#">Новая поездка</a>
+            </div>
+          </div>
     </header>
     <main>
         <div class="block_input_button">
-            <input type="text" placeholder="Название" id="name" class="input_class" onchange="get_info(1)">
+            <input type="text" placeholder="Название" id="event" class="input_class" onchange="get_info(1)">
                 <button class="block_button" onclick="get_info(1)">
                     Добавить название
                 </button>
@@ -26,12 +35,11 @@
                 </button>
         </div>
 
-        <div style="width: 100%; height: vh;"></div>
-
-        <div class="replace_block" id="who_pay">
-            <button id="button_who_pay" class="replace_button" onclick="add_payment()">
-                Добавить оплатившего
-            </button>
+        <div class="block_input_button">
+            <input type="text" value="@" id="person_who_pay" class="input_class" onchange="get_info(3)">
+                <button class="block_button" onclick="get_info(3)">
+                    Добавить оплатившего
+                </button>
         </div>
 
         <div class="general_block" id="add_person">
@@ -41,5 +49,25 @@
         </div>
     </main>
     <script src="scripts/foradd.js"></script>
+    <script>
+        /* Когда пользователь нажимает на кнопку, переключаться раскрывает содержимое */
+        function myFunction() {
+          document.getElementById("myDropdown").classList.toggle("show");
+        }
+        
+        // Закрыть раскрывающийся список, если пользователь щелкнет за его пределами.
+        window.onclick = function(event) {
+          if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+              var openDropdown = dropdowns[i];
+              if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+              }
+            }
+          }
+        }
+        </script>
 </body>
 </html>

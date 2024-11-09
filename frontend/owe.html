@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ваши задолжности</title>
+    <title>Ваши задолженности</title>
     <linK rel="icon" href="media/Капибара svg.svg">
     <link rel="stylesheet" href="style/style.css">
 
@@ -12,56 +12,42 @@
     <header>
         <div class="icon"></div>
         <div class="title">Заголовок</div>
+        <div class="dropdown">
+            <button onclick="myFunction()" class="dropbtn"> Меню</button>
+            <div id="myDropdown" class="dropdown-content">
+              <a href="owe.html">Ваши долги</a>
+              <a href="debtors.html">Долги друзей</a>
+              <a href="add.html">Новый счет</a>
+              <a href="#">Новая поездка</a>
+            </div>
+          </div>
     </header>
     <main>
-        <div id="users-container">
-        <div class="User_card_wrapper"> 
-            <div class="tg_name"> @Vasya</div>
-            <div class="loan_sum">  1000₽ </div>
-            <button>Pay</button>
-        </div>
-        <button id="myButton">History</button>
-    <div id="myPopup" class="popup">
-        <div class="popup-content">
-            <h1 style="color: green">
-                Transaction <br>
-                History
-            </h1>
-            <p>This is a popup box!</p>
-            <button id="closePopup">
-                Close
-            </button>
-        </div>
-    </div>
-</div>
+        <h2> Вы должны</h2>
+        <div id="users-container"></div>
     </main>
-    <script>
-        myButton.addEventListener(
-            "click",
-            function () {
-                myPopup.classList.add("show");
-            }
-        );
-        closePopup.addEventListener(
-            "click",
-            function () {
-                myPopup.classList.remove(
-                    "show"
-                );
-            }
-        );
-        window.addEventListener(
-            "click",
-            function (event) {
-                if (event.target == myPopup) {
-                    myPopup.classList.remove(
-                        "show"
-                    );
-                }
-            }
-        );
-    </script>
     <script src="scripts/get_users_loans.js"></script>
+    <script>
+        /* Когда пользователь нажимает на кнопку, переключаться раскрывает содержимое */
+        function myFunction() {
+          document.getElementById("myDropdown").classList.toggle("show");
+        }
+        
+        // Закрыть раскрывающийся список, если пользователь щелкнет за его пределами.
+        window.onclick = function(event) {
+          if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+              var openDropdown = dropdowns[i];
+              if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+              }
+            }
+          }
+        }
+        </script>
+   
     
 </body>
 </html>
