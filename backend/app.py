@@ -111,8 +111,6 @@ def close_trip():
 dp = Dispatcher()
 bot = Bot(settings.TOKEN)
 
-import threading
-
 import multiprocessing
 
 async def main():
