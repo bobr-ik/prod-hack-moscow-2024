@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ваши группы</title>
+    <linK rel="icon" href="media/Капибара svg.svg">
+    <link rel="stylesheet" href="style/style.css">
+
+</head>
+<body>
+    <header>
+        <div class="icon"></div>
+        <div class="title">PUM_divider</div>
+        <div class="dropdown">
+            <button onclick="myFunction()" class="dropbtn"> Меню</button>
+            <div id="myDropdown" class="dropdown-content">
+              <a href="owe.html">Ваши долги</a>
+              <a href="debtors.html">Долги друзей</a>
+              <a href="add.html">Новый счет</a>
+              <a href="#">Новая поездка</a>
+              <a href="groups.html"> Ваши группы</a>
+            </div>
+          </div>
+    </header>
+    <main>
+        <div id="trips-container"> </div>
+
+    </main>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="scripts/groups.js"></script>
+    <script>
+        /* Когда пользователь нажимает на кнопку, переключаться раскрывает содержимое */
+        function myFunction() {
+          document.getElementById("myDropdown").classList.toggle("show");
+        }
+        
+        // Закрыть раскрывающийся список, если пользователь щелкнет за его пределами.
+        window.onclick = function(event) {
+          if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+              var openDropdown = dropdowns[i];
+              if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+              }
+            }
+          }
+        }
+        </script>
+</body>
+</html>         
