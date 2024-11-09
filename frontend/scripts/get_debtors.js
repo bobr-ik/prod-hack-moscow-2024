@@ -1,9 +1,9 @@
-function fetchDebtors() {
-    return new Promise((resolve, reject) => {
-        // Здесь должен быть ваш код для запроса к базе данных
-        // Возвращаем для примера статичные данные
-        
-    });
+async function fetchDebtors() {
+    data = {'lenders_tg': '@ivan'}
+    res = await fetch('http://158.160.85.97:5000/get_user_debtors?lender_tg=@ivan')
+    res = await res.json();
+    console.log(res);
+    return res
 }
 
 // Функция для создания HTML элементов карточек пользователей
@@ -24,6 +24,7 @@ function createCard(debtor) {
     payButton.addEventListener('click', () => {
         const targetCard = document.getElementById(`user-${debtor.debtor_tg}`);
         targetCard.style.display = 'none';
+        fetch('http://158.160.85.97:5000/remove_debt?lender_tg=' + '@ivan' + '&debtor_tg=' + debtor.debtor_tg, {method: 'DELETE'});
     });
 
     card.appendChild(nameElement);

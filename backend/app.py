@@ -102,7 +102,7 @@ def get_trip_user_debtors():
     return jsonify(SyncORM.get_trip_user_debtors(lender_tg, trip_id))
 
 @app.route('/close_trip', methods=['DELETE'])
-@swag_from('swagger/close_trip.yaml') #TODO добавить
+@swag_from('swagger/close_trip.yaml')
 def close_trip():
     trip_id = request.args.get('trip_id')
     return jsonify(SyncORM.close_trip(trip_id))
@@ -111,25 +111,18 @@ def close_trip():
 dp = Dispatcher()
 bot = Bot(settings.TOKEN)
 
+import threading
+
+import multiprocessing
+
 async def main():
     dp.include_router(rt)
     await dp.start_polling(bot)
 
-async def start_back():
-    await app.run(host='0.0.0.0', port=5000)
-
-async def start():
-    try:
-        # Создаём две задачи
-        task1 = asyncio.create_task(main())
-        task2 = asyncio.create_task(start_back())
-
-        # Запускаем обе задачи параллельно
-        await asyncio.gather(task1, task2)
-    except Exception as e:
-        print(f"Ошибка: {e}")
-
-
+def run_main():
+    asyncio.run(main())
 
 if __name__ == '__main__':
-    asyncio.run(start())
+    process = multiprocessing.Process(target=run_main)
+    process.start()
+    app.run(host='0.0.0.0', port=5000)
