@@ -34,10 +34,10 @@ header {
         position: absolute;
         line-height: 10vh;
 
-        font-size: 5vh;
+        font-size: 6vw;
         font-family: Arial, Helvetica, sans-serif;
         font-style: italic;
-        letter-spacing: 0.5vh;
+        /* letter-spacing: 0.5vh; */
     }
 }
 
@@ -110,21 +110,77 @@ header {
     background-color: red;
 }
 
-/* .general_button {
-    position: relative;
+.general_block {
+    position: relative; 
+    display: block;
+    margin: auto;
+    margin-bottom: 10px;
+    width: 95%;
+    min-height: 6vh;
+    height: auto;
+}
+
+.general_button {
+    display: block;
+    margin: auto;
     width: 100%;
     height: 6vh;
-    margin-top: 10px;
-    margin-left: 10px;
 
-    button {
-        display: block;
-        left: 0;
-        width: 100% !important;
-    }
-} */
+    background-color: rgb(255, 220, 0);
+    border-radius: 10px;
+    border: none;
+}
 
-#input_name_pay {
+.style_person_block {
+    position: relative;
+    display: block;
+    margin: auto;
+    width: 100%;
+    height: 7vh;
+    margin-top: 1vh;
+}
+
+.style_person_name {
     position: absolute;
-    top: 6.5vh;
+    top: 0;
+    left: 0;
+    width: calc(50% - 10px);
+    height: calc(100% - 3px);
+
+    padding-left: 10px;
+    border: 3px solid rgb(255, 220, 0);
+    border-radius: 10px 0px 0px 10px;
+    font-size: 2vh;
+
+    &:focus {
+        outline: none; 
+     }
+}
+
+.style_person_summ {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: calc(50% - 10px);
+    height: calc(100% - 3px);
+
+    padding-left: 10px;
+    border: 3px rgb(255, 220, 0) solid; 
+    border-radius: 0px 10px 10px 0px;
+    font-size: 2vh;
+
+    &:focus {
+        outline: none; 
+     }
+}
+
+.send_button {
+    display: block;
+    margin: auto;
+    width: 95%;
+    height: 6vh;
+
+    background-color: rgb(255, 220, 0);
+    border-radius: 10px;
+    border: none;
 }
