@@ -23,7 +23,7 @@ function createCard(debtor) {
     amountElement.textContent = `Сумма: ${debtor.amount}`;
 
     const payButton = document.createElement('button');
-    payButton.textContent = 'Pay';
+    payButton.textContent = 'forgive';
     payButton.addEventListener('click', () => {
         const targetCard = document.getElementById(`user-${debtor.debtor_tg}`);
         targetCard.style.display = 'none';
