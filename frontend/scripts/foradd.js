@@ -1,96 +1,133 @@
 var main_dictionary = new Map();
 var debtors = new Array();
 var general_summ = 0;
-var persons_normal = 2;
+var save_general_summ = 0;
+var flag = 0;
+var main_person_name = 0;
+var main_person_summ = 0;
 
 function get_info(value) {
     switch (value) {
         case 1:
-            const ivent_name = document.getElementById('event').value
+            const ivent_name = document.getElementById('event').value;
             break;
 
         case 2:
-            general_summ = document.getElementById('summ').value
+            general_summ = document.getElementById('summ').value;
+            save_general_summ = general_summ;
             break;
 
         case 3:
-            const name_who_pay = document.getElementById('person_who_pay').value
-
-            main_dictionary.set(name_who_pay, general_summ);
+            main_person_name = document.getElementById('name_person_who_pay').value;
             break;
 
         case 4:
-            const person_name = document.getElementById('new_person_name').value
-            const person_summ = document.getElementById('new_person_summ').value
-            document.getElementById("new_person_summ").classList.toggle("style_person_summ");
-            document.getElementById("new_person_summ").classList.toggle("style_person_summ_check");
+            const new_person_name = document.getElementsByClassName('style_person_name')[
+                document.getElementsByClassName('style_person_name').length - 1].value;
+            break
+    }
+}
 
-            general_summ = general_summ - person_summ;  
-            var were_values = document.getElementsByClassName("style_person_summ");
-            for (let i = 0; i < were_values.length; i++) { 
-                were_values[i].value = general_summ / persons_normal;
-            }   
+var singles;
 
-            document.getElementById('new_person_name').id = "new_person_name_done";
-            document.getElementById('new_person_summ').id = "new_person_summ_done";
+function get_summ() {
+    var persons = document.getElementsByClassName('check');
+    singles = 0;
+    general_summ = save_general_summ;
+    for (i = 0; i < persons.length; i++) {
+        if (persons[i].value) {
+            general_summ -= persons[i].value;
+
+            if (general_summ <= 0) {
+                alert("Сумма чека равна 0");
+                flag = 1;
+            }
+
+            if (singles > 1) {
+                singles -= 1;
+            }
+        } else {
+            singles += 1;
+        }
     }
 }
 
 function add_person() {
-    if (document.getElementById("new_person_summ") != null) {
-        persons_normal += 1;
-        let moment_summ = general_summ / persons_normal;
+    get_summ(); //Обновляем сумму
+    if (flag != 1) {
+        const person_block = document.createElement('div');
+        person_block.classList.add("style_person_block");
+        document.getElementById("add_person").appendChild(person_block);
 
-        document.getElementById('new_person_name').id = "new_person_name_done";
-        document.getElementById('new_person_summ').id = "new_person_summ_done";
+        const person_name = document.createElement('input');
+        person_name.classList.add("style_person_name");
+        person_name.setAttribute('value', '@');
+        person_name.onchange = () => get_info(4);
+        person_block.appendChild(person_name);
 
-        var were_values = document.getElementsByClassName("style_person_summ");
-        for (let i = 0; i < were_values.length; i++) { 
-            were_values[i].value = moment_summ;
+        const person_summ = document.createElement('input');
+        person_summ.classList.add("style_person_summ");
+        person_summ.classList.add("check");
+        person_summ.setAttribute('placeholder', (general_summ / (singles + 1)).toFixed(2));
+        person_block.appendChild(person_summ); 
+
+        var array = document.getElementsByClassName('check');
+        for (i = 0; i < array.length; i++) {
+            array[i].setAttribute("placeholder", (general_summ / (singles + 1)).toFixed(2));
         }
-    } 
-    const person_block = document.createElement('div');
-    person_block.classList.add("style_person_block");
-    document.getElementById("add_person").appendChild(person_block);
 
-    const person_name = document.createElement('input');
-    person_name.classList.add("style_person_name");
-    person_name.id = "new_person_name";
-    person_name.setAttribute('value', '@');
-    person_block.appendChild(person_name);
+        if (document.getElementById("send_list_button") == null) {
+            const check_list = document.createElement('button');
+            check_list.classList.add("general_button");
+            check_list.innerHTML = "Подтвердить";
+            check_list.style = "width: 95%";
+            check_list.id = "check_list_button";
+            check_list.onclick = update_event;
+            document.body.appendChild(check_list);
+        }
 
-    const person_summ = document.createElement('input');
-    person_summ.classList.add("style_person_summ");
-    person_summ.classList.add("send");
-    person_summ.id = "new_person_summ";
-    let moment_summ = general_summ / persons_normal;
-    person_summ.onchange = () => get_info(4);
-    person_summ.setAttribute("placeholder", moment_summ);
-    person_block.appendChild(person_summ); 
+        if (document.getElementById("send_list_button") == null) {
+            const send_list = document.createElement('button');
+            send_list.classList.add("send_button");
+            send_list.innerHTML = "Добавить мероприятие";
+            send_list.id = "send_list_button";
+            send_list.onclick = send_event;
+            document.body.appendChild(send_list);
+        }
+    }
+}
 
-    if (document.getElementById("send_list_button") == null) {
-        const send_list = document.createElement('button');
-        send_list.classList.add("send_button");
-        send_list.innerHTML = "Добавить мероприятие";
-        send_list.id = "send_list_button";
-        send_list.onclick = send_event;
-        document.body.appendChild(send_list);
+function update_event() {
+    var array = document.getElementsByClassName('check');
+    for (i = 0; i < array.length; i++) {
+        if (array[i].value == "") {
+            array[i].value = (general_summ / (singles + 1)).toFixed(2);
+        }
     }
 }
 
 function send_event() {
-    var persons_name = document.getElementsByClassName("style_person_name");
-    var persons_summ = document.getElementsByClassName("send");
-    for (let i = 0; i < persons_name.length; i++) {
+    var persons_name = document.getElementsByClassName('style_person_name');
+    var persons_summ = document.getElementsByClassName('style_person_summ');
+
+    for (i = 0; i < persons_name.length; i++) {
         var person = new Map();
         person.set(persons_name[i].value, persons_summ[i].value);
+
         debtors.push(person);
     }
-
+    
+    main_dictionary.set(document.getElementById('name_person_who_pay').value, document.getElementById('summ_person_who_pay').value);
     main_dictionary.set("debtors_tg_list", debtors);
-    main_dictionary.set("event_name", document.getElementById("event").value);
+    main_dictionary.set("event", document.getElementById('event').value);
 
-    console.log(main_dictionary);
+    document.getElementById('papa_popup').classList.toggle("none_for_popup");
+}
+
+function add_single_event() {
+    var new_content = document.getElementById("all_popup_content")
+    new_content.innerHTML = "Успешно";
+    new_content.classList.add("content_after_save");
 }
 
 // function add_payment() {
