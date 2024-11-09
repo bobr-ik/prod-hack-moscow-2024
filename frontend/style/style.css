@@ -79,12 +79,17 @@ h2{
 .pay_button{ 
     background-color: rgb(255, 220, 0);
     border-radius: 10px;
+    font-size: 32px;
     border: 2px solid white;
-    width: 100px;
-    height: 40px;}
+    margin-top: 3%;
+    width: 200px;
+    height: 50px;}
     .dropbtn {
-        background-color: #4CAF50;
+        background-color: #000000;
         color: white;
+        border-radius: 10px;
+        margin-top: 15%;
+        margin-right: 25px;
         padding: 16px;
         font-size: 16px;
         border: none;
@@ -92,7 +97,7 @@ h2{
       }
       
       .dropbtn:hover, .dropbtn:focus {
-        background-color: #3e8e41;
+        background-color: #9b4117;
       }
       
       .dropdown {
@@ -122,3 +127,6 @@ h2{
       .dropdown a:hover {background-color: #ddd;}
       
       .show {display: block;}
+      .name_of_user{
+        font-size: 72spx;
+      }

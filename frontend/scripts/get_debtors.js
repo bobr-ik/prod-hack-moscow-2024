@@ -17,7 +17,7 @@ function createCard(debtor) {
     card.id = `user-${debtor.debtor_tg}`; // Устанавливаем уникальный id для каждой карточки
 
     const nameElement = document.createElement('p');
-    nameElement.textContent = `Пользователь: ${debtor.debtor_tg}`;
+    nameElement.textContent = ` ${debtor.debtor_tg}`;
 
     const amountElement = document.createElement('p');
     amountElement.textContent = `Сумма: ${debtor.amount} ₽`;
