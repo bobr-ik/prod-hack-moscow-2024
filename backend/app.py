@@ -51,8 +51,63 @@ def insert_debt():
     debtor_tg = request.args.get('debtor_tg')
     amount = request.args.get('amount')
     event_name = request.args.get('event_name')
-    event_date = request.args.get('event_date')
-    return jsonify(SyncORM.insert_debt(lender_tg, debtor_tg, amount, event_name, event_date))
+    return jsonify(SyncORM.insert_debt(lender_tg, debtor_tg, amount, event_name))
+
+
+@app.route('/remove_debt', methods=['DELETE'])
+@swag_from('swagger/remove_debt.yaml')
+def remove_debt():
+    lender_tg = request.args.get('lender_tg')
+    debtor_tg = request.args.get('debtor_tg')
+    return jsonify(SyncORM.remove_debt(lender_tg, debtor_tg))
+
+@app.route('/get_trips', methods=['GET'])
+@swag_from('swagger/get_trips.yaml')
+def get_trips():
+    tg_tag = request.args.get('tg_tag')
+    return jsonify(SyncORM.get_trips(tg_tag))
+
+@app.route('/create_trip', methods=['POST'])
+@swag_from('swagger/create_trip.yaml')
+def create_trip():
+    lender_tg = request.args.get('lender_tg')
+    debtors_tg_debpt_dict = request.args.get('debtors_tg_debpt_dict')
+    trip_name = request.args.get('trip_name')
+    event_name = request.args.get('event_name')
+    return jsonify(SyncORM.create_trip(lender_tg, debtors_tg_debpt_dict, trip_name, event_name))
+
+
+@app.route('/add_trip_debt', methods=['POST'])
+@swag_from('swagger/add_trip_debt.yaml')
+def add_trip_debt():
+    lender_tg = request.args.get('lender_tg')
+    debtors_tg_debpt_dict = request.args.get('debtors_tg_debpt_dict')
+    trip_id = request.args.get('trip_id')
+    event_name = request.args.get('event_name')
+    return jsonify(SyncORM.add_trip_debt(lender_tg, debtors_tg_debpt_dict, trip_id, event_name))
+
+
+
+@app.route('/get_trip_debts', methods=['GET'])
+@swag_from('swagger/get_trip_debts.yaml')
+def get_trip_debts():
+    trip_id = request.args.get('trip_id')
+    return jsonify(SyncORM.get_trip_debts(trip_id))
+
+
+@app.route('/get_trip_user_debtors', methods=['GET'])
+@swag_from('swagger/get_trip_user_debtors.yaml')
+def get_trip_user_debtors():
+    lender_tg = request.args.get('lender_tg')    
+    trip_id = request.args.get('trip_id')
+    return jsonify(SyncORM.get_trip_user_debtors(lender_tg, trip_id))
+
+@app.route('/close_trip', methods=['DELETE'])
+@swag_from('swagger/close_trip.yaml') #TODO добавить
+def close_trip():
+    trip_id = request.args.get('trip_id')
+    return jsonify(SyncORM.close_trip(trip_id))
+
 
 dp = Dispatcher()
 bot = Bot(settings.TOKEN)
@@ -61,6 +116,15 @@ async def main():
     dp.include_router(rt)
     await dp.start_polling(bot)
 
+async def start():
+    try:
+        task1 = asyncio.create_task(main())
+        task2 = asyncio.create_task(app.run(host='0.0.0.0', port=5000))
+        await task1
+        await task2
+    except Exception as e:
+        print(f"Ошибка: {e}")
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
-    asyncio.run(main())
+    asyncio.run(start())
