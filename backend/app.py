@@ -113,22 +113,16 @@ bot = Bot(settings.TOKEN)
 
 import threading
 
+import multiprocessing
+
 async def main():
     dp.include_router(rt)
     await dp.start_polling(bot)
 
-async def start_back():
-    await app.run(host='0.0.0.0', port=5000)
-
 def run_main():
     asyncio.run(main())
 
-def run_start_back():
-    asyncio.run(start_back())
-
 if __name__ == '__main__':
-    thread = threading.Thread(target=run_main)
-    thread.daemon = True
-    thread.start()
-
-    run_start_back()
+    process = multiprocessing.Process(target=run_main)
+    process.start()
+    app.run(host='0.0.0.0', port=5000)
