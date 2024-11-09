@@ -103,8 +103,6 @@ def get_trip_user_debtors():
     return jsonify(SyncORM.get_trip_user_debtors(lender_tg, trip_id))
 
 
-
-
 dp = Dispatcher()
 bot = Bot(settings.TOKEN)
 
@@ -112,6 +110,15 @@ async def main():
     dp.include_router(rt)
     await dp.start_polling(bot)
 
+async def start():
+    try:
+        task1 = asyncio.create_task(main())
+        task2 = asyncio.create_task(app.run(host='0.0.0.0', port=5000))
+        await task1
+        await task2
+    except Exception as e:
+        print(f"Ошибка: {e}")
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
-    asyncio.run(main())
+    asyncio.run(start())
