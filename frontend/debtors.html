@@ -11,6 +11,15 @@
         <header>
             <div class="icon"></div>
             <div class="title">Заголовок</div>
+            <div class="dropdown">
+                <button onclick="myFunction()" class="dropbtn"> Меню</button>
+                <div id="myDropdown" class="dropdown-content">
+                  <a href="owe.html">Ваши долги</a>
+                  <a href="debtors.html">Долги друзей</a>
+                  <a href="add.html">Новый счет</a>
+                  <a href="#">Новая поездка</a>
+                </div>
+              </div>
         </header>
         <main>
             <h2> Вам должны</h2>
@@ -19,6 +28,26 @@
     </div>
         </main>
         <script src="scripts/get_debtors.js"></script>
+        <script>
+            /* Когда пользователь нажимает на кнопку, переключаться раскрывает содержимое */
+            function myFunction() {
+              document.getElementById("myDropdown").classList.toggle("show");
+            }
+            
+            // Закрыть раскрывающийся список, если пользователь щелкнет за его пределами.
+            window.onclick = function(event) {
+              if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                  var openDropdown = dropdowns[i];
+                  if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                  }
+                }
+              }
+            }
+            </script>
         
     </body>
 </html>
