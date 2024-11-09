@@ -166,15 +166,15 @@ class SyncORM:
             session.commit()
     
 
-    @staticmethod
-    def get_user_history(lender_tg, debtor_tg):
-        with session_factory() as session:
-            query = select(DebtsHistoryORM).where(and_(DebtsHistoryORM.f_tg_tag_debtor == debtor_tg, DebtsHistoryORM.f_tg_tag_lender == lender_tg))
-            res = session.execute(query)
-            history = res.scalars().all() 
-            if history:
-                return list(map(lambda x: {'amount': x.f_debt_amount, 'event_name': x.f_event_name, 'event_date': x.f_event_date}, history))
-            return []
+    # @staticmethod
+    # def get_user_history(lender_tg, debtor_tg):
+    #     with session_factory() as session:
+    #         query = select(DebtsHistoryORM).where(and_(DebtsHistoryORM.f_tg_tag_debtor == debtor_tg, DebtsHistoryORM.f_tg_tag_lender == lender_tg))
+    #         res = session.execute(query)
+    #         history = res.scalars().all() 
+    #         if history:
+    #             return list(map(lambda x: {'amount': x.f_debt_amount, 'event_name': x.f_event_name, 'event_date': x.f_event_date}, history))
+    #         return []
 
     @staticmethod
     def get_user_debtors(lender_tg):
