@@ -54,7 +54,7 @@ def insert_debt():
     return jsonify(SyncORM.insert_debt(lender_tg, debtor_tg, amount, event_name))
 
 
-@app.route('/remove_debt', methods=['POST'])
+@app.route('/remove_debt', methods=['DELETE'])
 @swag_from('swagger/remove_debt.yaml')
 def remove_debt():
     lender_tg = request.args.get('lender_tg')
