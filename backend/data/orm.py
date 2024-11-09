@@ -1,6 +1,6 @@
 from sqlalchemy import select, and_, func, insert, or_, not_
 from data.database import sync_engine, session_factory, Base
-from data.models import DebtsHistoryORM
+from data.models import DebtsHistoryORM, TripsORM, TripDebtsORM
 from bot.handlers import send_notification
 
 
@@ -116,11 +116,27 @@ class SyncORM:
     
     
     @staticmethod
-    def insert_debt(lender_tg, debtors_tg_debpt_dict, event_name, event_date):
+    def insert_debt(lender_tg, debtors_tg_debpt_dict, event_name):
         with session_factory() as session:
             for debtor, amount in debtors_tg_debpt_dict:
-                create = DebtsHistoryORM(f_tg_tag_lender=lender_tg, f_tg_tag_debtor=debtor, f_debt_amount=amount, f_event_name=event_name, f_event_date=event_date)
+                create = DebtsHistoryORM(f_tg_tag_lender=lender_tg, f_tg_tag_debtor=debtor, f_debt_amount=amount, f_event_name=event_name)
                 session.add(create)
-                send_notification(debtor=debtor, lender_tg=lender_tg, event_name=event_name, event_date=event_date)
+                send_notification(debtor=debtor, lender_tg=lender_tg, event_name=event_name)
 
+            session.commit()
+
+    @staticmethod
+    def create_trip(lender_tg, debtors_tg_debpt_dict, trip_name, f_event_name):
+        with session_factory() as session:
+            new_id = session.execute(select(func.max(TripsORM.f_id))).scalar() + 1
+            session.add(TripsORM(f_trip_name=trip_name, fid=new_id))
+            session.commit()
+            SyncORM.add_trip_debt(lender_tg, debtors_tg_debpt_dict, new_id, f_event_name)
+    
+    @staticmethod
+    def add_trip_debt(lender_tg, debtors_tg_debpt_dict, trip_id, f_event_name):
+        with session_factory() as session:
+            for debtor, amount in debtors_tg_debpt_dict:
+                create = TripDebtsORM(f_trip_id=trip_id, f_debt_amount=amount, f_tg_tag_lender=lender_tg, f_tg_tag_debtor=debtor, f_event_name=f_event_name)
+                session.add(create)
             session.commit()

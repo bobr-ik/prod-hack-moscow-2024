@@ -24,7 +24,7 @@ class TripsORM(Base):
     f_trip_name: Mapped[str] = mapped_column(String(50))
     f_start_date: Mapped[datetime] = mapped_column(datetime.now(timezone.utc))
     f_end_date: Mapped[Optional[datetime]]
-    f_is_ended: Mapped[bool]
+    f_is_ended: Mapped[bool] = mapped_column(default=False)
 
 
 class TripDebtsORM(Base):
