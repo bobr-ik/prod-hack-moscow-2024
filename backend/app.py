@@ -102,6 +102,12 @@ def get_trip_user_debtors():
     trip_id = request.args.get('trip_id')
     return jsonify(SyncORM.get_trip_user_debtors(lender_tg, trip_id))
 
+@app.route('/close_trip', methods=['DELETE'])
+@swag_from('swagger/close_trip.yaml') #TODO добавить
+def close_trip():
+    trip_id = request.args.get('trip_id')
+    return jsonify(SyncORM.close_trip(trip_id))
+
 
 dp = Dispatcher()
 bot = Bot(settings.TOKEN)

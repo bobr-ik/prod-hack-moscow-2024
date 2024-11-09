@@ -12,7 +12,8 @@ services:
       - db_data:/var/lib/mysql
     networks:
       - webnet
-  
+
+
   backend:
     build: ./backend
     depends_on:
@@ -23,15 +24,19 @@ services:
       - "5000:5000"
     networks:
       - webnet
+    env_file:
+      - .env
   
-  frontend:
-    build: ./frontend
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-    networks:
-      - webnet
+  # frontend:
+  #   build: ./frontend
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - backend
+  #   networks:
+  #     - webnet
+  #   env_file:
+  #     - .env
 
 volumes:
   db_data:
