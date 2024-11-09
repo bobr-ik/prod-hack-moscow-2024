@@ -2,6 +2,7 @@ from sqlalchemy import select, and_, func, insert, or_, not_, update
 from data.database import sync_engine, session_factory, Base
 from data.models import DebtsHistoryORM, TripsORM, TripDebtsORM
 from bot.handlers import send_notification
+from datetime import datetime, timezone
 
 
 class SyncORM:
@@ -57,7 +58,111 @@ class SyncORM:
     }
 ]
             insert_data = insert(DebtsHistoryORM).values(create)
+            trips_data = [
+            {
+                "f_trip_name": "Trip 1",
+                "f_start_date": datetime(2024, 11, 8, 0, 0, 0, tzinfo=timezone.utc),
+                "f_end_date": datetime(2024, 11, 15, 0, 0, 0, tzinfo=timezone.utc),
+                "f_is_ended": False
+            },
+            {
+                "f_trip_name": "Trip 2",
+                "f_start_date": datetime(2024, 11, 16, 0, 0, 0, tzinfo=timezone.utc),
+                "f_end_date": datetime(2024, 11, 23, 0, 0, 0, tzinfo=timezone.utc),
+                "f_is_ended": False
+            },
+            {
+                "f_trip_name": "Trip 3",
+                "f_start_date": datetime(2024, 11, 24, 0, 0, 0, tzinfo=timezone.utc),
+                "f_end_date": datetime(2024, 12, 1, 0, 0, 0, tzinfo=timezone.utc),
+                "f_is_ended": False
+            },
+            {
+                "f_trip_name": "Trip 4",
+                "f_start_date": datetime(2024, 12, 2, 0, 0, 0, tzinfo=timezone.utc),
+                "f_end_date": datetime(2024, 12, 9, 0, 0, 0, tzinfo=timezone.utc),
+                "f_is_ended": False
+            }
+            ]
+            insert_data1 = insert(TripsORM).values(trips_data)
+            trip_debts_data = [
+    {
+        "f_trip_id": 1,
+        "f_debt_amount": 100,
+        "f_tg_tag_lender": "@ivan",
+        "f_tg_tag_debtor": "@petr",
+        "f_event_name": "Event 1",
+        "f_event_date": datetime(2024, 11, 9, 7, 23, 24, tzinfo=timezone.utc)
+    },
+    {
+        "f_trip_id": 1,
+        "f_debt_amount": 200,
+        "f_tg_tag_lender": "@petr",
+        "f_tg_tag_debtor": "@ivan",
+        "f_event_name": "Event 2",
+        "f_event_date": datetime(2024, 11, 10, 12, 0, 0, tzinfo=timezone.utc)
+    },
+    {
+        "f_trip_id": 2,
+        "f_debt_amount": 50,
+        "f_tg_tag_lender": "@ivan",
+        "f_tg_tag_debtor": "@alex",
+        "f_event_name": "Event 3",
+        "f_event_date": datetime(2024, 11, 11, 15, 30, 0, tzinfo=timezone.utc)
+    },
+    {
+        "f_trip_id": 3,
+        "f_debt_amount": 150,
+        "f_tg_tag_lender": "@petr",
+        "f_tg_tag_debtor": "@ivan",
+        "f_event_name": "Event 4",
+        "f_event_date": datetime(2024, 11, 12, 18, 0, 0, tzinfo=timezone.utc)
+    }, {
+        "f_trip_id": 1,
+        "f_debt_amount": 75,
+        "f_tg_tag_lender": "@alex",
+        "f_tg_tag_debtor": "@petr",
+        "f_event_name": "Event 5",
+        "f_event_date": datetime(2024, 11, 13, 10, 0, 0, tzinfo=timezone.utc)
+    },
+    {
+        "f_trip_id": 2,
+        "f_debt_amount": 120,
+        "f_tg_tag_lender": "@ivan",
+        "f_tg_tag_debtor": "@alex",
+        "f_event_name": "Event 6",
+        "f_event_date": datetime(2024, 11, 14, 12, 30, 0, tzinfo=timezone.utc)
+    },
+    {
+        "f_trip_id": 3,
+        "f_debt_amount": 90,
+        "f_tg_tag_lender": "@petr",
+        "f_tg_tag_debtor": "@ivan",
+        "f_event_name": "Event 7",
+        "f_event_date": datetime(2024, 11, 15, 15, 0, 0, tzinfo=timezone.utc)
+    },
+    {
+        "f_trip_id": 1,
+        "f_debt_amount": 60,
+        "f_tg_tag_lender": "@alex",
+        "f_tg_tag_debtor": "@ivan",
+        "f_event_name": "Event 8",
+        "f_event_date": datetime(2024, 11, 16, 10, 30, 0, tzinfo=timezone.utc)
+    },
+    {
+        "f_trip_id": 2,
+        "f_debt_amount": 180,
+        "f_tg_tag_lender": "@petr",
+        "f_tg_tag_debtor": "@alex",
+        "f_event_name": "Event 9",
+        "f_event_date": datetime(2024, 11, 17, 12, 0, 0, tzinfo=timezone.utc)
+    }
+]
+            insert_data2 = insert(TripDebtsORM).values(trip_debts_data)
             session.execute(insert_data)
+            session.execute(insert_data1)
+            session.flush()
+            session.execute(insert_data2)
             session.commit()
     
 
@@ -134,6 +239,13 @@ class SyncORM:
             session.execute(query)
             session.commit()
 
+
+    @staticmethod
+    def get_trips(tg_tag):
+        with session_factory() as session:
+            query = select(TripsORM.f_id, TripsORM.f_trip_name).where(or_(TripDebtsORM.f_tg_tag_lender == tg_tag, TripDebtsORM.f_tg_tag_debtor == tg_tag))
+            res = session.execute(query).all()
+            return [{'trip_id': elem[0], 'trip_name': elem[1]} for elem in res]
 
     @staticmethod
     def create_trip(lender_tg, debtors_tg_debpt_dict, trip_name, f_event_name):
