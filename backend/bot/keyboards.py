@@ -3,7 +3,7 @@ from aiogram.filters.callback_data import CallbackData
 
 start_kb = InlineKeyboardMarkup(
     inline_keyboard = [
-        [InlineKeyboardButton(text='Новый счёт', web_app=WebAppInfo(url='https://youtube.com')),] 
+        [InlineKeyboardButton(text='Новый счёт', web_app=WebAppInfo(url='https://www.sberbank.com/ru')),] 
         
     ], resize_keyboard=True
 )
