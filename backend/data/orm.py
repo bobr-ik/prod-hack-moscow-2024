@@ -234,11 +234,11 @@ class SyncORM:
         with session_factory() as session:
             query = (update(DebtsHistoryORM)
                      .where(or_(and_(DebtsHistoryORM.f_tg_tag_debtor == debtor_tg, DebtsHistoryORM.f_tg_tag_lender == lender_tg), 
-                                and_((DebtsHistoryORM.f_tg_tag_debtor == lender_tg, DebtsHistoryORM.f_tg_tag_lender == debtor_tg))))
-                            .values(is_closed=True))
+                                and_(DebtsHistoryORM.f_tg_tag_debtor == lender_tg, DebtsHistoryORM.f_tg_tag_lender == debtor_tg)))
+                            .values(f_is_closed=True))
             session.execute(query)
             session.commit()
-            return 1
+            return '1'
 
 
     @staticmethod
