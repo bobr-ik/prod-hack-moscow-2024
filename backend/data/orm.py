@@ -195,11 +195,13 @@ class SyncORM:
                     ans.append({'debtor_tg': elem, 'amount': subq2_res[elem]})
                 else:
                     ans.append({'debtor_tg': elem, 'amount': subq_res[elem]})
+            print(ans)
             return ans
         
 
     @staticmethod
     def get_user_lenders(debtor_tg):
+        print('aaaaaaaaa')
         # -> tg кому должен и сумма
         with session_factory() as session:
             # кто должен debter_tg и сколько
@@ -217,6 +219,7 @@ class SyncORM:
                     ans.append({'lenders_tg': elem, 'amount': subq2_res[elem]})
                 else:
                     ans.append({'lenders_tg': elem, 'amount': subq_res[elem]})
+            print(ans)
             return ans
     
     
