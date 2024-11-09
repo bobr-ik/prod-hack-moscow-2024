@@ -238,6 +238,7 @@ class SyncORM:
                             .values(is_closed=True))
             session.execute(query)
             session.commit()
+            return 1
 
 
     @staticmethod
