@@ -3,6 +3,9 @@
     padding: 0;
 }
 
+/* Классы - маркеры */
+.check {}
+
 button {
     font-size: 2.5vh;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
@@ -75,11 +78,53 @@ header {
     font-size: 2vh;
     border: none;
 
-    border-radius: 5px;
+    border-radius: 0px 0px 5px 5px;
     border: 3px rgb(255, 220, 0) solid;
 
     &:focus {
        outline: none; 
+    }
+}
+
+.who_pay_data_block {
+    position: absolute;
+    bottom: 0;
+
+    width: 100%;
+    height: 6vh;
+}
+
+.who_pay_name {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(50% - 10px);
+    height: 100%;
+
+    padding-left: 10px;
+    border: 3px rgb(255, 220, 0) solid;
+    border-radius: 0px 0px 0px 5px;
+    font-size: 2vh;
+
+    &:focus {
+        outline: none; 
+    }
+}
+
+.who_pay_summ {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: calc(50% - 10px);
+    height: 100%;
+
+    padding-left: 10px;
+    border: 3px rgb(255, 220, 0) solid;
+    border-radius: 0px 0px 5px 0px;
+    font-size: 2vh;
+
+    &:focus {
+        outline: none; 
     }
 }
 
@@ -124,6 +169,7 @@ header {
 .general_button {
     display: block;
     margin: auto;
+    margin-top: 2vh;
     width: 100%;
     height: 6vh;
 
@@ -155,7 +201,7 @@ header {
 
     &:focus {
         outline: none; 
-     }
+    }
 }
 
 .style_person_summ {
@@ -174,8 +220,6 @@ header {
         outline: none; 
      }
 }
-
-.send {}
 
 .style_person_summ_check {
     position: absolute;
@@ -197,7 +241,7 @@ header {
 .send_button {
     display: block;
     margin: auto;
-    margin-top: 3vh;
+    margin-top: 2vh;
     width: 97%;
     height: 8vh;
 
