@@ -21,6 +21,8 @@ function createCard(lender) {
     card.id = `user-${lender.lenders_tg}`; // Устанавливаем уникальный id для каждой карточки
 
     const nameElement = document.createElement('p');
+    const total_sum_element = document.createElement('h2');
+    total_sum_element.textContent = `${lender.lenders_tg}`;//тег с тотальной суммой вашего долга
     nameElement.textContent = `${lender.lenders_tg}`;  
     const amountElement = document.createElement('p');
     nameElement.classList.add('name_of_user');

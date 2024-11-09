@@ -2,8 +2,7 @@ from data.orm import SyncORM
 from flask import Flask, request, render_template, jsonify
 from flask_cors import CORS
 from flasgger import Flasgger, swag_from, Swagger
-from aiogram import Bot, Dispatcher   
-from bot.config import settings
+from aiogram import Dispatcher   
 import asyncio
 from bot.handlers import rt
 app = Flask(__name__)
@@ -109,26 +108,20 @@ def close_trip():
 
 
 dp = Dispatcher()
-bot = Bot(settings.TOKEN)
+from bot.dop import bot
+from data.orm import send_notification
 
-import threading
+import multiprocessing
 
+# asyncio.run(send_notification('dak_dolka', 'test'))
 async def main():
     dp.include_router(rt)
     await dp.start_polling(bot)
 
-async def start_back():
-    await app.run(host='0.0.0.0', port=5000)
-
 def run_main():
     asyncio.run(main())
 
-def run_start_back():
-    asyncio.run(start_back())
-
 if __name__ == '__main__':
-    thread = threading.Thread(target=run_main)
-    thread.daemon = True
-    thread.start()
-
-    run_start_back()
+    process = multiprocessing.Process(target=run_main)
+    process.start()
+    app.run(host='0.0.0.0', port=5000)

@@ -16,6 +16,7 @@ function createCard(debtor) {
     nameElement.textContent = ` ${debtor.debtor_tg}`;
 
     const amountElement = document.createElement('p');
+    const amountElementCaption=document.createElement('p');
     amountElement.textContent = `Сумма: ${debtor.amount} ₽`;
 
     const payButton = document.createElement('button');

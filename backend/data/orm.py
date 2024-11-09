@@ -1,9 +1,9 @@
 from sqlalchemy import select, and_, func, insert, or_, not_, update
 from data.database import sync_engine, session_factory, Base
-from data.models import DebtsHistoryORM, TripsORM, TripDebtsORM
-from bot.handlers import send_notification
+from data.models import DebtsHistoryORM, TripsORM, TripDebtsORM, Tg_idsORM
 from datetime import datetime, timezone
-
+from bot.dop import bot
+from aiogram.exceptions import TelegramBadRequest
 
 class SyncORM:
     @staticmethod
@@ -186,22 +186,22 @@ class SyncORM:
             # кому должен lender_tg и сколько
             subq1 = select(DebtsHistoryORM.f_tg_tag_lender.label('tg_tag_lender'), func.sum(DebtsHistoryORM.f_debt_amount).label('debt_amount')).where(and_(DebtsHistoryORM.f_tg_tag_debtor == lender_tg, DebtsHistoryORM.f_is_closed == False)).group_by(DebtsHistoryORM.f_tg_tag_lender).subquery()
             # вычитание тех, кого можно вычесть
-            subq2 = select(subq.c.tg_tag_debtor, (subq.c.debt_amount-subq1.c.debt_amount).label('debt_amount')).where(or_(and_(subq.c.tg_tag_debtor == subq1.c.tg_tag_lender, subq.c.debt_amount-subq1.c.debt_amount > 0), not_(subq.c.tg_tag_debtor.in_(subq_res.keys())))).subquery()
+            subq2 = select(subq.c.tg_tag_debtor, (subq.c.debt_amount-subq1.c.debt_amount).label('debt_amount')).where(or_(subq.c.tg_tag_debtor == subq1.c.tg_tag_lender, not_(subq.c.tg_tag_debtor.in_(subq_res.keys())))).subquery()
             subq2_res = {elem[0]: elem[1] for elem in session.execute(select(subq2)).all()}
             #красотаааааа
             ans = []
             for elem in subq_res.keys():
-                if elem in subq2_res:
+                if elem in subq2_res and subq2_res[elem] > 0:
                     ans.append({'debtor_tg': elem, 'amount': subq2_res[elem]})
+                elif elem in subq2_res and subq2_res[elem] <= 0:
+                    continue
                 else:
                     ans.append({'debtor_tg': elem, 'amount': subq_res[elem]})
-            print(ans)
             return ans
         
 
     @staticmethod
     def get_user_lenders(debtor_tg):
-        print('aaaaaaaaa')
         # -> tg кому должен и сумма
         with session_factory() as session:
             # кто должен debter_tg и сколько
@@ -210,16 +210,17 @@ class SyncORM:
             subq1 = select(DebtsHistoryORM.f_tg_tag_lender.label('tg_tag_lender'), func.sum(DebtsHistoryORM.f_debt_amount).label('debt_amount')).where(and_(DebtsHistoryORM.f_tg_tag_debtor == debtor_tg, DebtsHistoryORM.f_is_closed == False)).group_by(DebtsHistoryORM.f_tg_tag_lender).subquery()
             subq_res = {elem[0]: elem[1] for elem in session.execute(select(subq1)).all()}
             # вычитание тех, кого можно вычесть
-            subq2 = select(subq.c.tg_tag_debtor, (subq1.c.debt_amount - subq.c.debt_amount).label('debt_amount')).where(or_(and_(subq.c.tg_tag_debtor == subq1.c.tg_tag_lender, subq1.c.debt_amount - subq.c.debt_amount > 0))).subquery()
+            subq2 = select(subq.c.tg_tag_debtor, (subq1.c.debt_amount - subq.c.debt_amount).label('debt_amount')).where(or_(subq.c.tg_tag_debtor == subq1.c.tg_tag_lender)).subquery()
             subq2_res = {elem[0]: elem[1] for elem in session.execute(select(subq2)).all()}
             #красотаааааа
             ans = []
             for elem in subq_res.keys():
-                if elem in subq2_res:
+                if elem in subq2_res and subq2_res[elem] > 0:
                     ans.append({'lenders_tg': elem, 'amount': subq2_res[elem]})
+                elif elem in subq2_res and subq2_res[elem] <= 0:
+                    continue
                 else:
                     ans.append({'lenders_tg': elem, 'amount': subq_res[elem]})
-            print(ans)
             return ans
     
     
@@ -247,7 +248,7 @@ class SyncORM:
     @staticmethod
     def get_trips(tg_tag):
         with session_factory() as session:
-            query = select(TripsORM.f_id, TripsORM.f_trip_name).where(or_(TripDebtsORM.f_tg_tag_lender == tg_tag, TripDebtsORM.f_tg_tag_debtor == tg_tag))
+            query = select(TripsORM.f_id, TripsORM.f_trip_name).where(and_(TripsORM.f_id == TripDebtsORM.f_trip_id, or_(TripDebtsORM.f_tg_tag_lender == tg_tag, TripDebtsORM.f_tg_tag_debtor == tg_tag))).distinct()
             res = session.execute(query).all()
             return [{'trip_id': elem[0], 'trip_name': elem[1]} for elem in res]
 
@@ -294,5 +295,31 @@ class SyncORM:
                             .values(is_closed=True))
             session.execute(query)
             session.commit()
+
+    @staticmethod
+    def add_tg_id(username, tg_id):
+        with session_factory() as session:
+            create = [
+            {
+                "f_tg_id": f"{tg_id}",
+                "f_username": f"{username}"
+            }]
+            insert_data = insert(Tg_idsORM).values(create)
+            session.execute(insert_data)
+            session.commit()
+
+    @staticmethod
+    def get_tg_id(username):
+        with session_factory() as session:
+            res = session.execute(select(Tg_idsORM.f_tg_id).where(Tg_idsORM.f_username == username)).scalars().all()
+            return res[0]
+
+async def send_notification(debtor, text):
+    try:
+        chat_id = SyncORM.get_tg_id(debtor)
+        await bot.send_message(chat_id=int(chat_id), text=text)
+    except TelegramBadRequest as e:
+        print(f"Error: {e}")
+
     
     
