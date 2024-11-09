@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Главная</title>
-    <link rel="stylesheet" href="style/style.css">
+    <title>Ваши группы</title>
     <linK rel="icon" href="media/Капибара svg.svg">
+    <link rel="stylesheet" href="style/style.css">
+
 </head>
 <body>
     <header>
@@ -18,28 +19,16 @@
               <a href="debtors.html">Долги друзей</a>
               <a href="add.html">Новый счет</a>
               <a href="#">Новая поездка</a>
-              <a href="index.html">Главная</a>
+              <a href="groups.html"> Ваши группы</a>
             </div>
           </div>
     </header>
     <main>
-        <button class="main_button" onclick="move_to_place(1)">
-            Добавить мероприятие
-        </button>
-                <button class="main_button" onclick="move_to_place(4)">
-            Добавить поездку
-        </button>
-        <button class="main_button" onclick="move_to_place(2)">
-            Ваши задолженности
-        </button>
-        <button class="main_button" onclick="move_to_place(3)">
-            Должники
-        </button>   
+        <div id="trips-container"> </div>
+
     </main>
-    <footer>
-    </footer>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="scripts/main.js"></script>
+    <script src="scripts/groups.js"></script>
     <script>
         /* Когда пользователь нажимает на кнопку, переключаться раскрывает содержимое */
         function myFunction() {
@@ -61,4 +50,4 @@
         }
         </script>
 </body>
-</html>
+</html>         

@@ -1,4 +1,4 @@
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from aiogram.filters.callback_data import CallbackData
 
 start_kb = InlineKeyboardMarkup(
