@@ -121,7 +121,13 @@ function send_event() {
     main_dictionary.set("debtors_tg_list", debtors);
     main_dictionary.set("event", document.getElementById('event').value);
 
-    console.log(main_dictionary);
+    document.getElementById('papa_popup').classList.toggle("none_for_popup");
+}
+
+function add_single_event() {
+    var new_content = document.getElementById("all_popup_content")
+    new_content.innerHTML = "Успешно";
+    new_content.classList.add("content_after_save");
 }
 
 // function add_payment() {
