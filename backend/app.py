@@ -39,6 +39,7 @@ def get_user_debtors():
     return jsonify(SyncORM.get_user_debtors(lender_tg))
 
 @app.route('/get_user_lenders', methods=['GET'])
+@swag_from('swagger/get_user_lenders.yaml')
 def get_user_lenders():
     debtor_tg = request.args.get('debtor_tg')
     return jsonify(SyncORM.get_user_lenders(debtor_tg))
