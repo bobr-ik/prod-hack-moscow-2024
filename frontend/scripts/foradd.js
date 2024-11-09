@@ -1,5 +1,7 @@
 var main_dictionary = new Map();
 var debtors = new Array();
+var general_summ = 0;
+var persons_normal = 2;
 
 function get_info(value) {
     switch (value) {
@@ -8,26 +10,87 @@ function get_info(value) {
             break;
 
         case 2:
-            const general_summ = document.getElementById('summ').value
+            general_summ = document.getElementById('summ').value
             break;
 
         case 3:
             const name_who_pay = document.getElementById('person_who_pay').value
 
-            main_dictionary.set(name_who_pay, document.getElementById('summ').value);
+            main_dictionary.set(name_who_pay, general_summ);
             break;
 
         case 4:
             const person_name = document.getElementById('new_person_name').value
             const person_summ = document.getElementById('new_person_summ').value
+            document.getElementById("new_person_summ").classList.toggle("style_person_summ");
+            document.getElementById("new_person_summ").classList.toggle("style_person_summ_check");
 
-            var person = new Map();
-            person.set(person_name, person_summ);
-            debtors.push(person);
+            general_summ = general_summ - person_summ;  
+            var were_values = document.getElementsByClassName("style_person_summ");
+            for (let i = 0; i < were_values.length; i++) { 
+                were_values[i].value = general_summ / persons_normal;
+            }   
 
             document.getElementById('new_person_name').id = "new_person_name_done";
             document.getElementById('new_person_summ').id = "new_person_summ_done";
     }
+}
+
+function add_person() {
+    if (document.getElementById("new_person_summ") != null) {
+        persons_normal += 1;
+        let moment_summ = general_summ / persons_normal;
+
+        document.getElementById('new_person_name').id = "new_person_name_done";
+        document.getElementById('new_person_summ').id = "new_person_summ_done";
+
+        var were_values = document.getElementsByClassName("style_person_summ");
+        for (let i = 0; i < were_values.length; i++) { 
+            were_values[i].value = moment_summ;
+        }
+    } 
+    const person_block = document.createElement('div');
+    person_block.classList.add("style_person_block");
+    document.getElementById("add_person").appendChild(person_block);
+
+    const person_name = document.createElement('input');
+    person_name.classList.add("style_person_name");
+    person_name.id = "new_person_name";
+    person_name.setAttribute('value', '@');
+    person_block.appendChild(person_name);
+
+    const person_summ = document.createElement('input');
+    person_summ.classList.add("style_person_summ");
+    person_summ.classList.add("send");
+    person_summ.id = "new_person_summ";
+    let moment_summ = general_summ / persons_normal;
+    person_summ.onchange = () => get_info(4);
+    person_summ.setAttribute("placeholder", moment_summ);
+    person_block.appendChild(person_summ); 
+
+    if (document.getElementById("send_list_button") == null) {
+        const send_list = document.createElement('button');
+        send_list.classList.add("send_button");
+        send_list.innerHTML = "Добавить мероприятие";
+        send_list.id = "send_list_button";
+        send_list.onclick = send_event;
+        document.body.appendChild(send_list);
+    }
+}
+
+function send_event() {
+    var persons_name = document.getElementsByClassName("style_person_name");
+    var persons_summ = document.getElementsByClassName("send");
+    for (let i = 0; i < persons_name.length; i++) {
+        var person = new Map();
+        person.set(persons_name[i].value, persons_summ[i].value);
+        debtors.push(person);
+    }
+
+    main_dictionary.set("debtors_tg_list", debtors);
+    main_dictionary.set("event_name", document.getElementById("event").value);
+
+    console.log(main_dictionary);
 }
 
 // function add_payment() {
@@ -58,42 +121,3 @@ function get_info(value) {
 //     was_elem.setAttribute("onclick", func);
 //     document.getElementById(parent_id).appendChild(was_elem);
 // }
-
-function add_person() {
-    const person_block = document.createElement('div');
-    person_block.classList.add("style_person_block");
-    document.getElementById("add_person").appendChild(person_block);
-
-    const person_name = document.createElement('input');
-    person_name.classList.add("style_person_name");
-    person_name.id = "new_person_name";
-    person_name.setAttribute('value', '@');
-    person_block.appendChild(person_name);
-
-    const person_summ = document.createElement('input');
-    person_summ.classList.add("style_person_summ");
-    person_summ.id = "new_person_summ";
-    person_summ.onchange = () => get_info(4);
-    person_summ.setAttribute("placeholder", "Сумма");
-    person_block.appendChild(person_summ);
-
-    if (document.getElementById("send_list_button") == null) {
-        const send_list = document.createElement('button');
-        send_list.classList.add("send_button");
-        send_list.innerHTML = "Добавить мероприятие";
-        send_list.id = "send_list_button";
-        send_list.onclick = send_ivent;
-        document.body.appendChild(send_list);
-    }
-}
-
-function send_ivent() {
-    main_dictionary.set("debtors_tg_list", debtors);
-    main_dictionary.set("event_name", document.getElementById('event').value);
-    console.log(main_dictionary);
-    if (main_dictionary.size < 3 || main_dictionary.get("event_name") == "" || main_dictionary[0] == "") {
-        alert("Заполните пустые поля!");
-    } else {
-        alert("Мероприятие успешно добавлено!");
-    }   
-}
