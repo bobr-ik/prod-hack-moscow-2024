@@ -280,3 +280,15 @@ class SyncORM:
             subq1 = select(TripDebtsORM.f_tg_tag_lender.label('lender_tg'), func.sum(TripDebtsORM.f_debt_amount).label('debt_amount')).where(and_(TripDebtsORM.f_tg_tag_debtor == lender_tg, TripDebtsORM.f_trip_id == trip_id)).group_by(TripDebtsORM.f_tg_tag_lender).subquery()
             subq1_res = {elem[0]: elem[1] for elem in session.execute(select(subq1)).all()}
             return [[{elem: subq_res[elem]} for elem in subq_res], [{elem: subq1_res[elem]} for elem in subq1_res]]
+        
+    #close trip
+    @staticmethod
+    def close_trip(trip_id):
+        with session_factory() as session:
+            query = (update(TripsORM)
+                     .where(TripsORM.f_id == trip_id)
+                            .values(is_closed=True))
+            session.execute(query)
+            session.commit()
+    
+    

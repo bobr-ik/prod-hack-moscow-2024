@@ -102,7 +102,11 @@ def get_trip_user_debtors():
     trip_id = request.args.get('trip_id')
     return jsonify(SyncORM.get_trip_user_debtors(lender_tg, trip_id))
 
-
+@app.route('/close_trip', methods=['DELETE'])
+@swag_from('swagger/close_trip.yaml') #TODO добавить
+def close_trip():
+    trip_id = request.args.get('trip_id')
+    return jsonify(SyncORM.close_trip(trip_id))
 
 
 dp = Dispatcher()
@@ -112,6 +116,15 @@ async def main():
     dp.include_router(rt)
     await dp.start_polling(bot)
 
+async def start():
+    try:
+        task1 = asyncio.create_task(main())
+        task2 = asyncio.create_task(app.run(host='0.0.0.0', port=5000))
+        await task1
+        await task2
+    except Exception as e:
+        print(f"Ошибка: {e}")
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
-    asyncio.run(main())
+    asyncio.run(start())
