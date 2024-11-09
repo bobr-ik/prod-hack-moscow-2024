@@ -16,6 +16,7 @@ class DebtsHistoryORM(Base):
     f_tg_tag_debtor: Mapped[str] = mapped_column(String(50))
     f_event_name: Mapped[str] = mapped_column(String(50))
     f_event_date: Mapped[datetime] = mapped_column(datetime.now(timezone.utc))
+    f_is_closed: Mapped[bool] = mapped_column(default=False)
 
 
 class TripsORM(Base):

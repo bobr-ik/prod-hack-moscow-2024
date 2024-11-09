@@ -1,4 +1,4 @@
-from sqlalchemy import select, and_, func, insert, or_, not_
+from sqlalchemy import select, and_, func, insert, or_, not_, update
 from data.database import sync_engine, session_factory, Base
 from data.models import DebtsHistoryORM, TripsORM, TripDebtsORM
 from bot.handlers import send_notification
@@ -122,8 +122,18 @@ class SyncORM:
                 create = DebtsHistoryORM(f_tg_tag_lender=lender_tg, f_tg_tag_debtor=debtor, f_debt_amount=amount, f_event_name=event_name)
                 session.add(create)
                 send_notification(debtor=debtor, lender_tg=lender_tg, event_name=event_name)
-
             session.commit()
+    
+    @staticmethod
+    def remove_debt(lender_tg, debtor_tg):
+        with session_factory() as session:
+            query = (update(DebtsHistoryORM)
+                     .where(or_(and_(DebtsHistoryORM.f_tg_tag_debtor == debtor_tg, DebtsHistoryORM.f_tg_tag_lender == lender_tg), 
+                                and_((DebtsHistoryORM.f_tg_tag_debtor == lender_tg, DebtsHistoryORM.f_tg_tag_lender == debtor_tg))))
+                            .values(is_closed=True))
+            session.execute(query)
+            session.commit()
+
 
     @staticmethod
     def create_trip(lender_tg, debtors_tg_debpt_dict, trip_name, f_event_name):
