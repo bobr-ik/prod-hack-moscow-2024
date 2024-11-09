@@ -111,6 +111,8 @@ def close_trip():
 dp = Dispatcher()
 bot = Bot(settings.TOKEN)
 
+import threading
+
 async def main():
     dp.include_router(rt)
     await dp.start_polling(bot)
@@ -118,18 +120,15 @@ async def main():
 async def start_back():
     await app.run(host='0.0.0.0', port=5000)
 
-async def start():
-    try:
-        # Создаём две задачи
-        task1 = asyncio.create_task(main())
-        task2 = asyncio.create_task(start_back())
+def run_main():
+    asyncio.run(main())
 
-        # Запускаем обе задачи параллельно
-        await asyncio.gather(task1, task2)
-    except Exception as e:
-        print(f"Ошибка: {e}")
-
-
+def run_start_back():
+    asyncio.run(start_back())
 
 if __name__ == '__main__':
-    asyncio.run(start())
+    thread = threading.Thread(target=run_main)
+    thread.daemon = True
+    thread.start()
+
+    run_start_back()
