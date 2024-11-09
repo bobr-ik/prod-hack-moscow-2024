@@ -1,9 +1,9 @@
 from sqlalchemy import select, and_, func, insert, or_, not_, update
 from data.database import sync_engine, session_factory, Base
-from data.models import DebtsHistoryORM, TripsORM, TripDebtsORM
-from bot.handlers import send_notification
+from data.models import DebtsHistoryORM, TripsORM, TripDebtsORM, Tg_idsORM
 from datetime import datetime, timezone
-
+from bot.dop import bot
+from aiogram.exceptions import TelegramBadRequest
 
 class SyncORM:
     @staticmethod
@@ -247,7 +247,7 @@ class SyncORM:
     @staticmethod
     def get_trips(tg_tag):
         with session_factory() as session:
-            query = select(TripsORM.f_id, TripsORM.f_trip_name).where(or_(TripDebtsORM.f_tg_tag_lender == tg_tag, TripDebtsORM.f_tg_tag_debtor == tg_tag))
+            query = select(TripsORM.f_id, TripsORM.f_trip_name).where(and_(TripsORM.f_id == TripDebtsORM.f_trip_id, or_(TripDebtsORM.f_tg_tag_lender == tg_tag, TripDebtsORM.f_tg_tag_debtor == tg_tag)))
             res = session.execute(query).all()
             return [{'trip_id': elem[0], 'trip_name': elem[1]} for elem in res]
 
@@ -294,5 +294,31 @@ class SyncORM:
                             .values(is_closed=True))
             session.execute(query)
             session.commit()
+
+    @staticmethod
+    def add_tg_id(username, tg_id):
+        with session_factory() as session:
+            create = [
+            {
+                "f_tg_id": f"{tg_id}",
+                "f_username": f"{username}"
+            }]
+            insert_data = insert(Tg_idsORM).values(create)
+            session.execute(insert_data)
+            session.commit()
+
+    @staticmethod
+    def get_tg_id(username):
+        with session_factory() as session:
+            res = session.execute(select(Tg_idsORM.f_tg_id).where(Tg_idsORM.f_username == username)).scalars().all()
+            return res[0]
+
+async def send_notification(debtor, text):
+    try:
+        chat_id = SyncORM.get_tg_id(debtor)
+        await bot.send_message(chat_id=int(chat_id), text=text)
+    except TelegramBadRequest as e:
+        print(f"Error: {e}")
+
     
     
