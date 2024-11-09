@@ -88,6 +88,22 @@ def add_trip_debt():
 
 
 
+@app.route('/get_trip_debts', methods=['GET'])
+@swag_from('swagger/get_trip_debts.yaml')
+def get_trip_debts():
+    trip_id = request.args.get('trip_id')
+    return jsonify(SyncORM.get_trip_debts(trip_id))
+
+
+@app.route('/get_trip_user_debtors', methods=['GET'])
+@swag_from('swagger/get_trip_user_debtors.yaml')
+def get_trip_user_debtors():
+    lender_tg = request.args.get('lender_tg')    
+    trip_id = request.args.get('trip_id')
+    return jsonify(SyncORM.get_trip_user_debtors(lender_tg, trip_id))
+
+
+
 
 dp = Dispatcher()
 bot = Bot(settings.TOKEN)
