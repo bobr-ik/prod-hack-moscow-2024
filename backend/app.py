@@ -2,11 +2,9 @@ from data.orm import SyncORM
 from flask import Flask, request, render_template, jsonify
 from flask_cors import CORS
 from flasgger import Flasgger, swag_from, Swagger
-from aiogram import Bot, Dispatcher, Router     
+from aiogram import Bot, Dispatcher   
 from bot.config import settings
 import asyncio
-from aiogram.types import Message
-from aiogram.filters.command import CommandStart
 from bot.handlers import rt
 app = Flask(__name__)
 app.config["SWAGGER"] = {"title": "Мой API", "uiversion": 3}
@@ -116,14 +114,20 @@ async def main():
     dp.include_router(rt)
     await dp.start_polling(bot)
 
+async def start_back():
+    await app.run(host='0.0.0.0', port=5000)
+
 async def start():
     try:
+        # Создаём две задачи
         task1 = asyncio.create_task(main())
-        task2 = asyncio.create_task(app.run(host='0.0.0.0', port=5000))
-        await task1
-        await task2
+        task2 = asyncio.create_task(start_back())
+
+        # Запускаем обе задачи параллельно
+        await asyncio.gather(task1, task2)
     except Exception as e:
         print(f"Ошибка: {e}")
+
 
 
 if __name__ == '__main__':
