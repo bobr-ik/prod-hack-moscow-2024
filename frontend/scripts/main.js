@@ -6,6 +6,10 @@ async function req(){
     console.log(a['data'])
 }
 
+// function open(key) {
+//     setTimeout(move_to_place(key), 1000);
+// }
+
 function move_to_place(key) {
     switch (key) {
         case 1:

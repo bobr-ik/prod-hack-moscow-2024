@@ -1,7 +1,8 @@
-from sqlalchemy import select, and_, func, insert, or_, not_
+from sqlalchemy import select, and_, func, insert, or_, not_, update
 from data.database import sync_engine, session_factory, Base
-from data.models import DebtsHistoryORM
+from data.models import DebtsHistoryORM, TripsORM, TripDebtsORM
 from bot.handlers import send_notification
+from datetime import datetime, timezone
 
 
 class SyncORM:
@@ -15,49 +16,153 @@ class SyncORM:
     def insert_data():
         with session_factory() as session:
             create = [
-    {
-        "f_tg_tag_debtor": "@ivan",
-        "f_tg_tag_lender": "@petr",
-        "f_debt_amount": 150
-    },
-    {
-        "f_tg_tag_debtor": "@ivan",
-        "f_tg_tag_lender": "@petr",
-        "f_debt_amount": 200
-    },
-    {
-        "f_tg_tag_debtor": "@ivan",
-        "f_tg_tag_lender": "@oleg",
-        "f_debt_amount": 50
-    },
-    {
-        "f_tg_tag_debtor": "@sveta",
-        "f_tg_tag_lender": "@petr",
-        "f_debt_amount": 150
-    },
-    {
-        "f_tg_tag_debtor": "@sveta",
-        "f_tg_tag_lender": "@oleg",
-        "f_debt_amount": 75
-    },
-    {
-        "f_tg_tag_debtor": "@petr",
-        "f_tg_tag_lender": "@ivan",
-        "f_debt_amount": 300
-    },
-    {
-        "f_tg_tag_debtor": "@oleg",
-        "f_tg_tag_lender": "@ivan",
-        "f_debt_amount": 25
-    },
-    {
-        "f_tg_tag_debtor": "@oleg",
-        "f_tg_tag_lender": "@sveta",
-        "f_debt_amount": 100
-    }
-]
+            {
+                "f_tg_tag_debtor": "@ivan",
+                "f_tg_tag_lender": "@petr",
+                "f_debt_amount": 150
+            },
+            {
+                "f_tg_tag_debtor": "@ivan",
+                "f_tg_tag_lender": "@petr",
+                "f_debt_amount": 200
+            },
+            {
+                "f_tg_tag_debtor": "@ivan",
+                "f_tg_tag_lender": "@oleg",
+                "f_debt_amount": 50
+            },
+            {
+                "f_tg_tag_debtor": "@sveta",
+                "f_tg_tag_lender": "@petr",
+                "f_debt_amount": 150
+            },
+            {
+                "f_tg_tag_debtor": "@sveta",
+                "f_tg_tag_lender": "@oleg",
+                "f_debt_amount": 75
+            },
+            {
+                "f_tg_tag_debtor": "@petr",
+                "f_tg_tag_lender": "@ivan",
+                "f_debt_amount": 300
+            },
+            {
+                "f_tg_tag_debtor": "@oleg",
+                "f_tg_tag_lender": "@ivan",
+                "f_debt_amount": 25
+            },
+            {
+                "f_tg_tag_debtor": "@oleg",
+                "f_tg_tag_lender": "@sveta",
+                "f_debt_amount": 100
+            }
+        ]
             insert_data = insert(DebtsHistoryORM).values(create)
+            trips_data = [
+            {
+                "f_trip_name": "Trip 1",
+                "f_start_date": datetime(2024, 11, 8, 0, 0, 0, tzinfo=timezone.utc),
+                "f_end_date": datetime(2024, 11, 15, 0, 0, 0, tzinfo=timezone.utc),
+                "f_is_ended": False
+            },
+            {
+                "f_trip_name": "Trip 2",
+                "f_start_date": datetime(2024, 11, 16, 0, 0, 0, tzinfo=timezone.utc),
+                "f_end_date": datetime(2024, 11, 23, 0, 0, 0, tzinfo=timezone.utc),
+                "f_is_ended": False
+            },
+            {
+                "f_trip_name": "Trip 3",
+                "f_start_date": datetime(2024, 11, 24, 0, 0, 0, tzinfo=timezone.utc),
+                "f_end_date": datetime(2024, 12, 1, 0, 0, 0, tzinfo=timezone.utc),
+                "f_is_ended": False
+            },
+            {
+                "f_trip_name": "Trip 4",
+                "f_start_date": datetime(2024, 12, 2, 0, 0, 0, tzinfo=timezone.utc),
+                "f_end_date": datetime(2024, 12, 9, 0, 0, 0, tzinfo=timezone.utc),
+                "f_is_ended": False
+            }
+            ]
+            insert_data1 = insert(TripsORM).values(trips_data)
+            trip_debts_data = [
+        {
+            "f_trip_id": 1,
+            "f_debt_amount": 100,
+            "f_tg_tag_lender": "@ivan",
+            "f_tg_tag_debtor": "@petr",
+            "f_event_name": "Event 1",
+            "f_event_date": datetime(2024, 11, 9, 7, 23, 24, tzinfo=timezone.utc)
+        },
+        {
+            "f_trip_id": 1,
+            "f_debt_amount": 200,
+            "f_tg_tag_lender": "@petr",
+            "f_tg_tag_debtor": "@ivan",
+            "f_event_name": "Event 2",
+            "f_event_date": datetime(2024, 11, 10, 12, 0, 0, tzinfo=timezone.utc)
+        },
+        {
+            "f_trip_id": 2,
+            "f_debt_amount": 50,
+            "f_tg_tag_lender": "@ivan",
+            "f_tg_tag_debtor": "@alex",
+            "f_event_name": "Event 3",
+            "f_event_date": datetime(2024, 11, 11, 15, 30, 0, tzinfo=timezone.utc)
+        },
+        {
+            "f_trip_id": 3,
+            "f_debt_amount": 150,
+            "f_tg_tag_lender": "@petr",
+            "f_tg_tag_debtor": "@ivan",
+            "f_event_name": "Event 4",
+            "f_event_date": datetime(2024, 11, 12, 18, 0, 0, tzinfo=timezone.utc)
+        }, {
+            "f_trip_id": 1,
+            "f_debt_amount": 75,
+            "f_tg_tag_lender": "@alex",
+            "f_tg_tag_debtor": "@petr",
+            "f_event_name": "Event 5",
+            "f_event_date": datetime(2024, 11, 13, 10, 0, 0, tzinfo=timezone.utc)
+        },
+        {
+            "f_trip_id": 2,
+            "f_debt_amount": 120,
+            "f_tg_tag_lender": "@ivan",
+            "f_tg_tag_debtor": "@alex",
+            "f_event_name": "Event 6",
+            "f_event_date": datetime(2024, 11, 14, 12, 30, 0, tzinfo=timezone.utc)
+        },
+        {
+            "f_trip_id": 3,
+            "f_debt_amount": 90,
+            "f_tg_tag_lender": "@petr",
+            "f_tg_tag_debtor": "@ivan",
+            "f_event_name": "Event 7",
+            "f_event_date": datetime(2024, 11, 15, 15, 0, 0, tzinfo=timezone.utc)
+        },
+        {
+            "f_trip_id": 1,
+            "f_debt_amount": 60,
+            "f_tg_tag_lender": "@alex",
+            "f_tg_tag_debtor": "@ivan",
+            "f_event_name": "Event 8",
+            "f_event_date": datetime(2024, 11, 16, 10, 30, 0, tzinfo=timezone.utc)
+        },
+        {
+            "f_trip_id": 2,
+            "f_debt_amount": 180,
+            "f_tg_tag_lender": "@petr",
+            "f_tg_tag_debtor": "@alex",
+            "f_event_name": "Event 9",
+            "f_event_date": datetime(2024, 11, 17, 12, 0, 0, tzinfo=timezone.utc)
+        }
+        ]
+            insert_data2 = insert(TripDebtsORM).values(trip_debts_data)
             session.execute(insert_data)
+            session.execute(insert_data1)
+            session.flush()
+            session.execute(insert_data2)
             session.commit()
     
 
@@ -109,18 +214,69 @@ class SyncORM:
             ans = []
             for elem in subq_res.keys():
                 if elem in subq2_res:
-                    ans.append({'debtor_tg': elem, 'amount': subq2_res[elem]})
+                    ans.append({'lenders_tg': elem, 'amount': subq2_res[elem]})
                 else:
-                    ans.append({'debtor_tg': elem, 'amount': subq_res[elem]})
+                    ans.append({'lenders_tg': elem, 'amount': subq_res[elem]})
             return ans
     
     
     @staticmethod
-    def insert_debt(lender_tg, debtors_tg_debpt_dict, event_name, event_date):
+    def insert_debt(lender_tg, debtors_tg_debpt_dict, event_name):
         with session_factory() as session:
             for debtor, amount in debtors_tg_debpt_dict:
-                create = DebtsHistoryORM(f_tg_tag_lender=lender_tg, f_tg_tag_debtor=debtor, f_debt_amount=amount, f_event_name=event_name, f_event_date=event_date)
+                create = DebtsHistoryORM(f_tg_tag_lender=lender_tg, f_tg_tag_debtor=debtor, f_debt_amount=amount, f_event_name=event_name)
                 session.add(create)
-                send_notification(debtor=debtor, lender_tg=lender_tg, event_name=event_name, event_date=event_date)
-
+                send_notification(debtor=debtor, lender_tg=lender_tg, event_name=event_name)
             session.commit()
+    
+    @staticmethod
+    def remove_debt(lender_tg, debtor_tg):
+        with session_factory() as session:
+            query = (update(DebtsHistoryORM)
+                     .where(or_(and_(DebtsHistoryORM.f_tg_tag_debtor == debtor_tg, DebtsHistoryORM.f_tg_tag_lender == lender_tg), 
+                                and_((DebtsHistoryORM.f_tg_tag_debtor == lender_tg, DebtsHistoryORM.f_tg_tag_lender == debtor_tg))))
+                            .values(is_closed=True))
+            session.execute(query)
+            session.commit()
+
+
+    @staticmethod
+    def get_trips(tg_tag):
+        with session_factory() as session:
+            query = select(TripsORM.f_id, TripsORM.f_trip_name).where(or_(TripDebtsORM.f_tg_tag_lender == tg_tag, TripDebtsORM.f_tg_tag_debtor == tg_tag))
+            res = session.execute(query).all()
+            return [{'trip_id': elem[0], 'trip_name': elem[1]} for elem in res]
+
+    @staticmethod
+    def create_trip(lender_tg, debtors_tg_debpt_dict, trip_name, f_event_name):
+        with session_factory() as session:
+            new_id = session.execute(select(func.max(TripsORM.f_id))).scalar() + 1
+            session.add(TripsORM(f_trip_name=trip_name, fid=new_id))
+            session.commit()
+            SyncORM.add_trip_debt(lender_tg, debtors_tg_debpt_dict, new_id, f_event_name)
+    
+    @staticmethod
+    def add_trip_debt(lender_tg, debtors_tg_debpt_dict, trip_id, f_event_name):
+        with session_factory() as session:
+            for debtor, amount in debtors_tg_debpt_dict:
+                create = TripDebtsORM(f_trip_id=trip_id, f_debt_amount=amount, f_tg_tag_lender=lender_tg, f_tg_tag_debtor=debtor, f_event_name=f_event_name)
+                session.add(create)
+            session.commit()
+
+    @staticmethod
+    def get_trip_debts(trip_id):
+        with session_factory() as session:
+            query = select(TripDebtsORM.f_tg_tag_lender, TripDebtsORM.f_tg_tag_debtor, TripDebtsORM.f_debt_amount, TripDebtsORM.f_event_name).where(TripDebtsORM.f_trip_id == trip_id)
+            res = session.execute(query).all()
+            return [{'lender_tg': elem[0], 'debtor_tg': elem[1], 'amount': elem[2], 'event_name': elem[3]} for elem in res]
+        
+    @staticmethod
+    def get_trip_user_debtors(lender_tg, trip_id):
+        with session_factory() as session:
+            #Кто должен lender_tg и сколько
+            subq = select(TripDebtsORM.f_tg_tag_debtor.label('debtor_tg'), func.sum(TripDebtsORM.f_debt_amount).label('debt_amount')).where(and_(TripDebtsORM.f_tg_tag_lender == lender_tg, TripDebtsORM.f_trip_id == trip_id)).group_by(TripDebtsORM.f_tg_tag_debtor).subquery()
+            subq_res = {elem[0]: elem[1] for elem in session.execute(select(subq)).all()}
+            # кому должен lender_tg и сколько
+            subq1 = select(TripDebtsORM.f_tg_tag_lender.label('lender_tg'), func.sum(TripDebtsORM.f_debt_amount).label('debt_amount')).where(and_(TripDebtsORM.f_tg_tag_debtor == lender_tg, TripDebtsORM.f_trip_id == trip_id)).group_by(TripDebtsORM.f_tg_tag_lender).subquery()
+            subq1_res = {elem[0]: elem[1] for elem in session.execute(select(subq1)).all()}
+            return [[{elem: subq_res[elem]} for elem in subq_res], [{elem: subq1_res[elem]} for elem in subq1_res]]
