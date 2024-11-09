@@ -14,7 +14,7 @@
     </header>
     <main>
         <div class="block_input_button">
-            <input type="text" placeholder="Название" id="name" class="input_class" onchange="get_info(1)">
+            <input type="text" placeholder="Название" id="event" class="input_class" onchange="get_info(1)">
                 <button class="block_button" onclick="get_info(1)">
                     Добавить название
                 </button>
@@ -26,12 +26,11 @@
                 </button>
         </div>
 
-        <div style="width: 100%; height: vh;"></div>
-
-        <div class="replace_block" id="who_pay">
-            <button id="button_who_pay" class="replace_button" onclick="add_payment()">
-                Добавить оплатившего
-            </button>
+        <div class="block_input_button">
+            <input type="text" value="@" id="person_who_pay" class="input_class" onchange="get_info(3)">
+                <button class="block_button" onclick="get_info(3)">
+                    Добавить оплатившего
+                </button>
         </div>
 
         <div class="general_block" id="add_person">
