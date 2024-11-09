@@ -1,13 +1,9 @@
-function fetchDebtors() {
-    return new Promise((resolve, reject) => {
-        // Здесь должен быть ваш код для запроса к базе данных
-        // Возвращаем для примера статичные данные
-        resolve([
-            { debtor_tg: 'user1', amount: 100 },
-            { debtor_tg: 'user2', amount: 200 },
-            { debtor_tg: 'user3', amount: 150 }
-        ]);
-    });
+async function fetchDebtors() {
+    data = {'lenders_tg': '@ivan'}
+    res = await fetch('http://158.160.85.97:5000/get_user_debtors?lender_tg=@ivan')
+    res = await res.json();
+    console.log(res);
+    return res
 }
 
 // Функция для создания HTML элементов карточек пользователей
@@ -17,7 +13,7 @@ function createCard(debtor) {
     card.id = `user-${debtor.debtor_tg}`; // Устанавливаем уникальный id для каждой карточки
 
     const nameElement = document.createElement('p');
-    nameElement.textContent = `Пользователь: ${debtor.debtor_tg}`;
+    nameElement.textContent = ` ${debtor.debtor_tg}`;
 
     const amountElement = document.createElement('p');
     amountElement.textContent = `Сумма: ${debtor.amount} ₽`;
@@ -28,6 +24,7 @@ function createCard(debtor) {
     payButton.addEventListener('click', () => {
         const targetCard = document.getElementById(`user-${debtor.debtor_tg}`);
         targetCard.style.display = 'none';
+        fetch('http://158.160.85.97:5000/remove_debt?lender_tg=' + '@ivan' + '&debtor_tg=' + debtor.debtor_tg, {method: 'DELETE'});
     });
 
     card.appendChild(nameElement);

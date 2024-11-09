@@ -1,11 +1,11 @@
  async function fetchLenders() {
-        // Здесь должен быть ваш код для запроса к базе данных
-        // Возвращаем для примера статичные данные
+        // Здесь  код для запроса к базе данных
         data = {'lenders_tg': '@ivan'}
         res = await fetch('http://158.160.85.97:5000/get_user_lenders?debtor_tg=@ivan')
         res = await res.json();
         console.log(res);
         return res
+        // Возвращаем для примера статичные данные
         // resolve([
         //     { lenders_tg: 'user1', amount: 100 },
         //     { lenders_tg: 'user2', amount: 200 },
@@ -21,9 +21,9 @@ function createCard(lender) {
     card.id = `user-${lender.lenders_tg}`; // Устанавливаем уникальный id для каждой карточки
 
     const nameElement = document.createElement('p');
-        nameElement.textContent = `Пользователь: ${lender.lenders_tg}`;
-
+    nameElement.textContent = `${lender.lenders_tg}`;  
     const amountElement = document.createElement('p');
+    nameElement.classList.add('name_of_user');
     amountElement.textContent = `Сумма: ${lender.amount} ₽`;
 
     const payButton = document.createElement('button');
@@ -32,7 +32,7 @@ function createCard(lender) {
     payButton.addEventListener('click', () => {
         const targetCard = document.getElementById(`user-${lender.lenders_tg}`);
         targetCard.style.display = 'none';
-        fetch('http://158.160.85.97:5000/remove_debt' + '?lender_tg=' + lender.lenders_tg + '&debtor_tg=@ivan', {method: 'DELETE'});
+        fetch('http://158.160.85.97:5000/remove_debt?lender_tg=' + lender.lenders_tg + '&debtor_tg=' + '@ivan', {method: 'DELETE'});
     });
 
     card.appendChild(nameElement);

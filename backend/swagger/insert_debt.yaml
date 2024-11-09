@@ -1,68 +1,56 @@
-summary: Добавить новый долг
-description: Создаёт новый долг между пользователем (кредитором) и должником.
+summary: Insert debt information
+description: Inserts debt information into the database
+consumes:
+  - application/json
 parameters:
-  - name: lender_tg
-    in: query
-    description: Telegram ID кредитора
+  - in: query
+    name: lender_tg
+    description: Telegram ID of the lender
     required: true
     schema:
       type: string
-  - name: debtor_tg
-    in: query
-    description: Telegram ID должника
+  - in: query
+    name: debtors_tg_list
+    description: List of Telegram IDs of the debtors
     required: true
     schema:
-      type: string
-  - name: amount
-    in: query
-    description: Сумма долга
-    required: true
-    schema:
-      type: number
-      format: float
-  - name: event_name
-    in: query
-    description: Название события, связанного с долгом (например, "заем" или "оплата")
+      type: array
+      items:
+        type: string
+  - in: query
+    name: event_name
+    description: Name of the event
     required: true
     schema:
       type: string
 responses:
   200:
-    description: Долг успешно добавлен
+    description: Debt information inserted successfully
     content:
       application/json:
         schema:
           type: object
           properties:
-            success:
-              type: boolean
-              example: true
             message:
               type: string
-              example: "Debt successfully inserted"
+              description: Success message
   400:
-    description: Ошибка запроса, например, отсутствие обязательных параметров
+    description: Invalid request
     content:
       application/json:
         schema:
           type: object
           properties:
-            success:
-              type: boolean
-              example: false
             error:
               type: string
-              example: "Missing required parameters"
+              description: Error message
   500:
-    description: Внутренняя ошибка сервера
+    description: Internal server error
     content:
       application/json:
         schema:
           type: object
           properties:
-            success:
-              type: boolean
-              example: false
             error:
               type: string
-              example: "Internal server error"
+              description: Error message

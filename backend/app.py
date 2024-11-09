@@ -2,11 +2,9 @@ from data.orm import SyncORM
 from flask import Flask, request, render_template, jsonify
 from flask_cors import CORS
 from flasgger import Flasgger, swag_from, Swagger
-from aiogram import Bot, Dispatcher, Router     
+from aiogram import Bot, Dispatcher   
 from bot.config import settings
 import asyncio
-from aiogram.types import Message
-from aiogram.filters.command import CommandStart
 from bot.handlers import rt
 app = Flask(__name__)
 app.config["SWAGGER"] = {"title": "Мой API", "uiversion": 3}
@@ -41,17 +39,18 @@ def get_user_debtors():
 @app.route('/get_user_lenders', methods=['GET'])
 @swag_from('swagger/get_user_lenders.yaml')
 def get_user_lenders():
+    print('aaaa')
     debtor_tg = request.args.get('debtor_tg')
+    print('aaaa')
     return jsonify(SyncORM.get_user_lenders(debtor_tg))
 
 @app.route('/insert_debt', methods=['POST'])
 @swag_from('swagger/insert_debt.yaml')
 def insert_debt():
     lender_tg = request.args.get('lender_tg')
-    debtor_tg = request.args.get('debtor_tg')
-    amount = request.args.get('amount')
+    debtors_tg_list = request.args.get('debtors_tg_list')
     event_name = request.args.get('event_name')
-    return jsonify(SyncORM.insert_debt(lender_tg, debtor_tg, amount, event_name))
+    return jsonify(SyncORM.insert_debt(lender_tg, debtors_tg_list, event_name))
 
 
 @app.route('/remove_debt', methods=['DELETE'])
@@ -59,7 +58,7 @@ def insert_debt():
 def remove_debt():
     lender_tg = request.args.get('lender_tg')
     debtor_tg = request.args.get('debtor_tg')
-    return jsonify(SyncORM.remove_debt(lender_tg, debtor_tg))
+    return SyncORM.remove_debt(lender_tg, debtor_tg)
 
 @app.route('/get_trips', methods=['GET'])
 @swag_from('swagger/get_trips.yaml')
@@ -103,7 +102,7 @@ def get_trip_user_debtors():
     return jsonify(SyncORM.get_trip_user_debtors(lender_tg, trip_id))
 
 @app.route('/close_trip', methods=['DELETE'])
-@swag_from('swagger/close_trip.yaml') #TODO добавить
+@swag_from('swagger/close_trip.yaml')
 def close_trip():
     trip_id = request.args.get('trip_id')
     return jsonify(SyncORM.close_trip(trip_id))
@@ -112,19 +111,24 @@ def close_trip():
 dp = Dispatcher()
 bot = Bot(settings.TOKEN)
 
+import threading
+
 async def main():
     dp.include_router(rt)
     await dp.start_polling(bot)
 
-async def start():
-    try:
-        task1 = asyncio.create_task(main())
-        task2 = asyncio.create_task(app.run(host='0.0.0.0', port=5000))
-        await task1
-        await task2
-    except Exception as e:
-        print(f"Ошибка: {e}")
+async def start_back():
+    await app.run(host='0.0.0.0', port=5000)
 
+def run_main():
+    asyncio.run(main())
+
+def run_start_back():
+    asyncio.run(start_back())
 
 if __name__ == '__main__':
-    asyncio.run(start())
+    thread = threading.Thread(target=run_main)
+    thread.daemon = True
+    thread.start()
+
+    run_start_back()
