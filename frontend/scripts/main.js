@@ -21,5 +21,8 @@ function move_to_place(key) {
         case 3:
             window.location.href = "debtors.html";
             break;
+        case 4:
+            window.location.href = "trip.html";
+            break;
     }
 }
