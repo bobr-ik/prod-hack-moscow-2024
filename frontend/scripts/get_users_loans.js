@@ -7,6 +7,8 @@ function fetchDebtors() {
             { debtor_tg: 'user2', amount: 200 },
             { debtor_tg: 'user3', amount: 150 }
         ]);
+
+        
     });
 }
 
