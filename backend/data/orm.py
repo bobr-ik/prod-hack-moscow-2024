@@ -247,7 +247,7 @@ class SyncORM:
     @staticmethod
     def get_trips(tg_tag):
         with session_factory() as session:
-            query = select(TripsORM.f_id, TripsORM.f_trip_name).where(and_(TripsORM.f_id == TripDebtsORM.f_trip_id, or_(TripDebtsORM.f_tg_tag_lender == tg_tag, TripDebtsORM.f_tg_tag_debtor == tg_tag)))
+            query = select(TripsORM.f_id, TripsORM.f_trip_name).where(and_(TripsORM.f_id == TripDebtsORM.f_trip_id, or_(TripDebtsORM.f_tg_tag_lender == tg_tag, TripDebtsORM.f_tg_tag_debtor == tg_tag))).distinct()
             res = session.execute(query).all()
             return [{'trip_id': elem[0], 'trip_name': elem[1]} for elem in res]
 
