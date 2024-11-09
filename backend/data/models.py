@@ -36,5 +36,5 @@ class TripDebtsORM(Base):
     f_tg_tag_lender: Mapped[str] = mapped_column(String(50))
     f_tg_tag_debtor: Mapped[str] = mapped_column(String(50))
     f_event_name: Mapped[str] = mapped_column(String(50))
-    f_event_date: Mapped[DateTime] = mapped_column(DateTime(datetime.now(timezone.utc)))
+    f_event_date: Mapped[DateTime] = mapped_column(DateTime[datetime.now(timezone.utc)])
 

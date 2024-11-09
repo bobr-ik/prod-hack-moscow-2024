@@ -12,9 +12,34 @@
         <div class="icon"></div>
         <div class="title">Заголовок</div>
     </header>
+    <main>
+        <div class="block_input_button">
+            <input type="text" placeholder="Название" id="name" class="input_class">
+                <button class="block_button" onclick="get_info(1)">
+                    Добавить название
+                </button>
+        </div>
+        <div class="block_input_button">
+            <input type="text" placeholder="Общая сумма" id="summ" class="input_class">
+                <button class="block_button" onclick="get_info(2)">
+                    Добавить сумму
+                </button>
+        </div>
 
-    
+        <div style="width: 100%; height: vh;"></div>
 
-    <script src="script/toadd.js"></script>
+        <div class="replace_block" id="who_pay">
+            <button id="button_who_pay" class="replace_button" onclick="add_payment()">
+                Добавить оплатившего
+            </button>
+        </div>
+
+        <div class="general_button" id="name_pay">
+            <button id="button_person_who_pay" class="start_button" onclick="add_payment()">
+                Добавить участника платежа
+            </button>
+        </div>
+    </main>
+    <script src="scripts/foradd.js"></script>
 </body>
 </html>
