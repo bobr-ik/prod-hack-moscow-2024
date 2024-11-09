@@ -12,17 +12,17 @@ responses:
     description: Список долгов пользователя
     content:
       application/json:
-schema:
-  type: array
-  items:
-    type: object
-    properties:
-      debt_id:
-        type: integer
-      amount:
-        type: number
-      due_date:
-        type: string
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              debt_id:
+                type: integer
+              amount:
+                type: number
+              due_date:
+                type: string
   400:
     description: Ошибка запроса
   404:

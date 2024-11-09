@@ -32,7 +32,7 @@ function createCard(lender) {
     payButton.addEventListener('click', () => {
         const targetCard = document.getElementById(`user-${lender.lenders_tg}`);
         targetCard.style.display = 'none';
-        fetch('http://127.0.0.1:5000/remove_debt?lender_tg=' + lender + '&debtor_tg=' + '@ivan', {method: 'DELETE'});
+        fetch('http://158.160.85.97:5000/remove_debt?lender_tg=' + lender.lenders_tg + '&debtor_tg=' + '@ivan', {method: 'DELETE'});
     });
 
     card.appendChild(nameElement);
