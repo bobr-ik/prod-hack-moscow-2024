@@ -46,10 +46,9 @@ def get_user_lenders():
 @swag_from('swagger/insert_debt.yaml')
 def insert_debt():
     lender_tg = request.args.get('lender_tg')
-    debtor_tg = request.args.get('debtor_tg')
-    amount = request.args.get('amount')
+    debtors_tg_list = request.args.get('debtors_tg_list')
     event_name = request.args.get('event_name')
-    return jsonify(SyncORM.insert_debt(lender_tg, debtor_tg, amount, event_name))
+    return jsonify(SyncORM.insert_debt(lender_tg, debtors_tg_list, event_name))
 
 
 @app.route('/remove_debt', methods=['DELETE'])
@@ -57,7 +56,7 @@ def insert_debt():
 def remove_debt():
     lender_tg = request.args.get('lender_tg')
     debtor_tg = request.args.get('debtor_tg')
-    return jsonify(SyncORM.remove_debt(lender_tg, debtor_tg))
+    return SyncORM.remove_debt(lender_tg, debtor_tg)
 
 @app.route('/get_trips', methods=['GET'])
 @swag_from('swagger/get_trips.yaml')
