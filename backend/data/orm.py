@@ -181,10 +181,10 @@ class SyncORM:
         # -> tg должников и сумма
         with session_factory() as session:
             # кто должен lender_tg и сколько
-            subq = select(DebtsHistoryORM.f_tg_tag_debtor.label('tg_tag_debtor'), func.sum(DebtsHistoryORM.f_debt_amount).label('debt_amount')).where(DebtsHistoryORM.f_tg_tag_lender == lender_tg).group_by(DebtsHistoryORM.f_tg_tag_debtor).subquery()
+            subq = select(DebtsHistoryORM.f_tg_tag_debtor.label('tg_tag_debtor'), func.sum(DebtsHistoryORM.f_debt_amount).label('debt_amount')).where(and_(DebtsHistoryORM.f_tg_tag_lender == lender_tg, DebtsHistoryORM.f_is_closed == False)).group_by(DebtsHistoryORM.f_tg_tag_debtor).subquery()
             subq_res = {elem[0]: elem[1] for elem in session.execute(select(subq)).all()}
             # кому должен lender_tg и сколько
-            subq1 = select(DebtsHistoryORM.f_tg_tag_lender.label('tg_tag_lender'), func.sum(DebtsHistoryORM.f_debt_amount).label('debt_amount')).where(DebtsHistoryORM.f_tg_tag_debtor == lender_tg).group_by(DebtsHistoryORM.f_tg_tag_lender).subquery()
+            subq1 = select(DebtsHistoryORM.f_tg_tag_lender.label('tg_tag_lender'), func.sum(DebtsHistoryORM.f_debt_amount).label('debt_amount')).where(and_(DebtsHistoryORM.f_tg_tag_debtor == lender_tg, DebtsHistoryORM.f_is_closed == False)).group_by(DebtsHistoryORM.f_tg_tag_lender).subquery()
             # вычитание тех, кого можно вычесть
             subq2 = select(subq.c.tg_tag_debtor, (subq.c.debt_amount-subq1.c.debt_amount).label('debt_amount')).where(or_(and_(subq.c.tg_tag_debtor == subq1.c.tg_tag_lender, subq.c.debt_amount-subq1.c.debt_amount > 0), not_(subq.c.tg_tag_debtor.in_(subq_res.keys())))).subquery()
             subq2_res = {elem[0]: elem[1] for elem in session.execute(select(subq2)).all()}
@@ -203,9 +203,9 @@ class SyncORM:
         # -> tg кому должен и сумма
         with session_factory() as session:
             # кто должен debter_tg и сколько
-            subq = select(DebtsHistoryORM.f_tg_tag_debtor.label('tg_tag_debtor'), func.sum(DebtsHistoryORM.f_debt_amount).label('debt_amount')).where(DebtsHistoryORM.f_tg_tag_lender == debtor_tg).group_by(DebtsHistoryORM.f_tg_tag_debtor).subquery()
+            subq = select(DebtsHistoryORM.f_tg_tag_debtor.label('tg_tag_debtor'), func.sum(DebtsHistoryORM.f_debt_amount).label('debt_amount')).where(and_(DebtsHistoryORM.f_tg_tag_lender == debtor_tg, DebtsHistoryORM.f_is_closed == False)).group_by(DebtsHistoryORM.f_tg_tag_debtor).subquery()
             # кому должен debter_tg и сколько
-            subq1 = select(DebtsHistoryORM.f_tg_tag_lender.label('tg_tag_lender'), func.sum(DebtsHistoryORM.f_debt_amount).label('debt_amount')).where(DebtsHistoryORM.f_tg_tag_debtor == debtor_tg).group_by(DebtsHistoryORM.f_tg_tag_lender).subquery()
+            subq1 = select(DebtsHistoryORM.f_tg_tag_lender.label('tg_tag_lender'), func.sum(DebtsHistoryORM.f_debt_amount).label('debt_amount')).where(and_(DebtsHistoryORM.f_tg_tag_debtor == debtor_tg, DebtsHistoryORM.f_is_closed == False)).group_by(DebtsHistoryORM.f_tg_tag_lender).subquery()
             subq_res = {elem[0]: elem[1] for elem in session.execute(select(subq1)).all()}
             # вычитание тех, кого можно вычесть
             subq2 = select(subq.c.tg_tag_debtor, (subq1.c.debt_amount - subq.c.debt_amount).label('debt_amount')).where(or_(and_(subq.c.tg_tag_debtor == subq1.c.tg_tag_lender, subq1.c.debt_amount - subq.c.debt_amount > 0))).subquery()
@@ -234,10 +234,11 @@ class SyncORM:
         with session_factory() as session:
             query = (update(DebtsHistoryORM)
                      .where(or_(and_(DebtsHistoryORM.f_tg_tag_debtor == debtor_tg, DebtsHistoryORM.f_tg_tag_lender == lender_tg), 
-                                and_((DebtsHistoryORM.f_tg_tag_debtor == lender_tg, DebtsHistoryORM.f_tg_tag_lender == debtor_tg))))
-                            .values(is_closed=True))
+                                and_(DebtsHistoryORM.f_tg_tag_debtor == lender_tg, DebtsHistoryORM.f_tg_tag_lender == debtor_tg)))
+                            .values(f_is_closed=True))
             session.execute(query)
             session.commit()
+            return '1'
 
 
     @staticmethod

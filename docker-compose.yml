@@ -12,12 +12,18 @@ services:
       - db_data:/var/lib/mysql
     networks:
       - webnet
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -u bobr2 -p'qwerty123'" ]
+      interval: 3s
+      timeout: 1s
+      retries: 10
 
 
   backend:
     build: ./backend
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       DATABASE_URL: mysql+pymysql://bobr2:qwerty123@db/my_database
     ports:
