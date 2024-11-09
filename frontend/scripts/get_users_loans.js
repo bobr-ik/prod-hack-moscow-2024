@@ -1,11 +1,11 @@
  async function fetchLenders() {
-        // Здесь должен быть ваш код для запроса к базе данных
-        // Возвращаем для примера статичные данные
+        // Здесь  код для запроса к базе данных
         data = {'lenders_tg': '@ivan'}
         res = await fetch('http://158.160.85.97:5000/get_user_lenders?debtor_tg=@ivan')
         res = await res.json();
         console.log(res);
         return res
+        // Возвращаем для примера статичные данные
         // resolve([
         //     { lenders_tg: 'user1', amount: 100 },
         //     { lenders_tg: 'user2', amount: 200 },
