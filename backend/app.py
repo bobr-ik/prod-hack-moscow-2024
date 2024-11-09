@@ -32,9 +32,9 @@ def get_user_history():
     return jsonify(SyncORM.get_user_history(lender_tg, debtor_tg))
 
 
-@app.route('/get_user_debts', methods=['GET'])
-@swag_from('swagger/get_user_debts.yaml')
-def get_user_debts():
+@app.route('/get_user_debtors', methods=['GET'])
+@swag_from('swagger/get_user_debtors.yaml')
+def get_user_debtors():
     lender_tg = request.args.get('lender_tg')
     return jsonify(SyncORM.get_user_debtors(lender_tg))
 
