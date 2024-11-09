@@ -20,10 +20,11 @@ function createCard(debtor) {
     nameElement.textContent = `Пользователь: ${debtor.debtor_tg}`;
 
     const amountElement = document.createElement('p');
-    amountElement.textContent = `Сумма: ${debtor.amount}`;
+    amountElement.textContent = `Сумма: ${debtor.amount} ₽`;
 
     const payButton = document.createElement('button');
     payButton.textContent = 'forgive';
+    payButton.classList.add('pay_button');
     payButton.addEventListener('click', () => {
         const targetCard = document.getElementById(`user-${debtor.debtor_tg}`);
         targetCard.style.display = 'none';

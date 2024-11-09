@@ -62,45 +62,23 @@ footer {
     height: 10vh;
     background-color: rgb(255, 220, 0);
 }
-#myButton {
-   margin-left: 40%;}
-.popup {
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,
-            0,
-            0,
-            0.4);
-    display: none;
-}
-
-.popup-content {
-    background-color: white;
-
-    margin: 10% auto;
-    padding: 20px;
-    border: 1px solid #888888;
-    width: 40%;
-    height: 100%;
-    font-weight: bolder;
-
-}
-
-.popup-content button {
-    display: block;
-    margin: 0 auto;
-}
-
-.show {
-    display: block;
-}
 .User_card_wrapper{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
 }
+.card{
+    text-align: center;
+    margin: 10%;
+    font-size: 32px;
+}
+h2{
+    text-align: center;
+    font-size: 45px;
+}
+.pay_button{ 
+    background-color: rgb(255, 220, 0);
+    border-radius: 10px;
+    border: 2px solid white;
+    width: 100px;
+    height: 40px;}
