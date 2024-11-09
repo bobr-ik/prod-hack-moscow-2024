@@ -214,9 +214,9 @@ class SyncORM:
             ans = []
             for elem in subq_res.keys():
                 if elem in subq2_res:
-                    ans.append({'debtor_tg': elem, 'amount': subq2_res[elem]})
+                    ans.append({'lenders_tg': elem, 'amount': subq2_res[elem]})
                 else:
-                    ans.append({'debtor_tg': elem, 'amount': subq_res[elem]})
+                    ans.append({'lenders_tg': elem, 'amount': subq_res[elem]})
             return ans
     
     
