@@ -8,26 +8,42 @@
     <linK rel="icon" href="media/Капибара svg.svg">
 </head>
 <body>
-    <header>
-        <div class="icon"></div>
-        <div class="title">PUM_divider</div>
-        <div class="dropdown">
-            <button onclick="myFunction()" class="dropbtn"> Меню</button>
-            <div id="myDropdown" class="dropdown-content">
-              <a href="owe.html">Ваши долги</a>
-              <a href="debtors.html">Долги друзей</a>
-              <a href="add.html">Новый счет</a>
-              <a href="#">Новая поездка</a>
-              <a href="index.html">Главная</a>
-            </div>
+    <header class="header">
+      <div class="container">
+          <div class="header_body">
+              <div class="header_logo"></div>
+              <div class="title">Главная</div>
+              <div class="header_burger">
+                  <span></span>
+              </div>
+              <nav class="header_menu">
+                  <ul class="header_list">
+                      <li>
+                          <a href="index.html" class="header_link">Главная</a>
+                      </li>
+                      <li>
+                          <a href="add.html" class="header_link">Добавить мероприятие</a>
+                      </li>
+                      <li>
+                          <a href="trip.html" class="header_link">Доступные поездки</a>
+                      </li>
+                      <li>
+                          <a href="owe.html" class="header_link">Ваши долги</a>
+                      </li>
+                      <li>
+                          <a href="debtors.html" class="header_link">Долги вам</a>
+                      </li>
+                  </ul>
+              </nav>
           </div>
+      </div>
     </header>
-    <main>
+    <main style="margin-top: 11vh;">
         <button class="main_button" onclick="move_to_place(1)">
             Добавить мероприятие
         </button>
                 <button class="main_button" onclick="move_to_place(4)">
-            Добавить поездку
+            Доступные поездки
         </button>
         <button class="main_button" onclick="move_to_place(2)">
             Ваши задолженности
@@ -39,6 +55,7 @@
     <footer>
     </footer>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="scripts/main.js"></script>
     <script>
         /* Когда пользователь нажимает на кнопку, переключаться раскрывает содержимое */

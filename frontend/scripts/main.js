@@ -26,3 +26,11 @@ function move_to_place(key) {
             break;
     }
 }
+
+$(document).ready(function() {
+    $('.header_burger').click(function(event) {
+        $(this).toggleClass('active');
+        $('.header_menu').toggleClass('active');
+        $('body').toggleClass('lock');
+    });
+});
