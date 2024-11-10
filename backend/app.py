@@ -121,6 +121,6 @@ def run_main():
     asyncio.run(main())
 
 if __name__ == '__main__':
-    process = multiprocessing.Process(target=run_main)
-    process.start()
+#    process = multiprocessing.Process(target=run_main)
+ #   process.start()
     app.run(host='0.0.0.0', port=5000)

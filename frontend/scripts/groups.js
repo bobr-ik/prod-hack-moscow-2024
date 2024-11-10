@@ -1,7 +1,7 @@
 async function fetchTrips() {
     // Здесь  код для запроса к базе данных
     data = {'lenders_tg': '@ivan'}
-    // res = await fetch('http://158.160.85.97:5000/get_trips?tg_tag=@ivan')
+    // res = await fetch('http://158.160.30.88:5000/get_trips?tg_tag=@ivan')
     // res = await res.json();
     res=[{1:1,'trip_name':'trip1'},{2:2,'trip_name':'trip2'},{3:3,'trip_name':'trip3'}]
     console.log(res);
@@ -81,7 +81,7 @@ card.appendChild(nameElement);
         const targetCard2 = document.getElementById(trip['trip_name']);
         targetCard.style.display = 'none';
         targetCard2.style.display = 'none';
-        //fetch('http://158.160.85.97:5000/remove_trip?lender_tg=' + lender.lenders_tg + '&debtor_tg=' + '@' +'data["user"]["username"]', {method: 'DELETE'});
+        //fetch('http://158.160.30.88:5000/remove_trip?lender_tg=' + lender.lenders_tg + '&debtor_tg=' + '@' +'data["user"]["username"]', {method: 'DELETE'});
         
     });
 
