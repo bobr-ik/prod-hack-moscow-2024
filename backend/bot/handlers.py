@@ -17,5 +17,8 @@ rt = Router()
 
 @rt.message(Command("start"))
 async def start(message: Message, state: FSMContext):
+    print(message.from_user.username, message.chat.id)
+    # print(SyncORM.get_tg_id('dak_dolka'), 'check')
     SyncORM.add_tg_id(message.from_user.username, message.chat.id)
+    print(SyncORM.get_tg_id('dak_dolka'), 'inserted')
     await message.answer("Здрасте. Что будем делать?", reply_markup=kb.start_kb)

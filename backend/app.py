@@ -109,7 +109,6 @@ def close_trip():
 
 dp = Dispatcher()
 from bot.dop import bot
-from data.orm import send_notification
 
 import multiprocessing
 
