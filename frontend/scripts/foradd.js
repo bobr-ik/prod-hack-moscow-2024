@@ -130,6 +130,14 @@ function add_single_event() {
     new_content.classList.add("content_after_save");
 }
 
+$(document).ready(function() {
+    $('.header_burger').click(function(event) {
+        $(this).toggleClass('active');
+        $('.header_menu').toggleClass('active');
+        $('body').toggleClass('lock');
+    });
+});
+
 // function add_payment() {
 //     document.getElementById("button_who_pay").remove();
 

@@ -14,8 +14,8 @@ services:
       - webnet
     healthcheck:
       test: [ "CMD-SHELL", "mysqladmin ping -u bobr2 -p'qwerty123'" ]
-      interval: 3s
-      timeout: 1s
+      interval: 30s
+      timeout: 10s
       retries: 10
 
 
@@ -33,16 +33,18 @@ services:
     env_file:
       - .env
   
-  frontend:
-    build: ./frontend
-    ports:
-      - "443:80"
-    depends_on:
-      - backend
-    networks:
-      - webnet
-    env_file:
-      - .env
+  # frontend:
+  #   build: ./frontend
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - backend
+  #   networks:
+  #     - webnet
+  #   env_file:
+  #     - .env
+  
+
 
 volumes:
   db_data:
