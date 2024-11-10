@@ -8,41 +8,55 @@
     <link rel="stylesheet" href="style/style.css">
 
 </head>
-<body>
-  <header class="header">
-    <div class="container">
-        <div class="header_body">
-            <div class="header_logo"></div>
-            <div class="title">Главная</div>
-            <div class="header_burger">
-                <span></span>
-            </div>
-            <nav class="header_menu">
-                <ul class="header_list">
-                    <li>
-                        <a href="index.html" class="header_link">Главная</a>
-                    </li>
-                    <li>
-                        <a href="add.html" class="header_link">Добавить мероприятие</a>
-                    </li>
-                    <li>
-                        <a href="groups.html" class="header_link">Доступные поездки</a>
-                    </li>
-                    <li>
-                        <a href="owe.html" class="header_link">Ваши долги</a>
-                    </li>
-                    <li>
-                        <a href="debtors.html" class="header_link">Долги вам</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </div>
-  </header>
-  <main style="margin-top: 11vh;">
-    <h2> Ваши поездки</h2>
-    <div id="trips-container"> </div>
+  <body onload="createCard()">
+    <header class="header">
+      <div class="container">
+          <div class="header_body">
+              <div class="header_logo"></div>
+              <div class="title">Ваши поездки</div>
+              <div class="header_burger">
+                  <span></span>
+              </div>
+              <nav class="header_menu">
+                  <ul class="header_list">
+                      <li>
+                          <a href="index.html" class="header_link">Главная</a>
+                      </li>
+                      <li>
+                          <a href="add.html" class="header_link">Добавить мероприятие</a>
+                      </li>
+                      <li>
+                          <a href="groups.html" class="header_link">Доступные поездки</a>
+                      </li>
+                      <li>
+                          <a href="owe.html" class="header_link">Ваши долги</a>
+                      </li>
+                      <li>
+                          <a href="debtors.html" class="header_link">Долги вам</a>
+                      </li>
+                  </ul>
+              </nav>
+          </div>
+      </div>
+    </header>
+    <main style="margin-top: 11vh;">
+      <div id="trips-container"></div>
     </main>
+    <div class="main_popup none_for_popup" id="papa_popup">
+      <div class="popup_body">
+        <div class="popup_name">
+          <p>Информация о поездке</p>
+        </div>
+        <div class="popup_content" id="all_popup_content">
+          <div id="people" class="popup_info_block">
+            <h3>Участники</h3>
+          </div>
+          <div id="events" class="popup_info_block">
+            <h3>Мероприятия</h3>
+          </div>
+        </div>
+      </div>
+    </div>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="scripts/groups.js"></script>
@@ -51,7 +65,7 @@
         function myFunction() {
           document.getElementById("myDropdown").classList.toggle("show");
         }
-        
+
         // Закрыть раскрывающийся список, если пользователь щелкнет за его пределами.
         window.onclick = function(event) {
           if (!event.target.matches('.dropbtn')) {
@@ -65,6 +79,6 @@
             }
           }
         }
-        </script>
-</body>
+    </script>
+  </body>
 </html>         
