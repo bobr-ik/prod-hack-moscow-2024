@@ -19,8 +19,8 @@ function createCard(trip) {
 const card = document.createElement('div');
 card.classList.add('card');
 card.id = `user-${trip}`; // Устанавливаем уникальный id для каждой карточки
-const nameElement = document.createElement('p');
-nameElement.textContent = `${trip}`;  
+const nameElement = document.createElement('button');
+nameElement.textContent = `${trip['trip_name']}`;  
 nameElement.classList.add('name_of_user');
 card.appendChild(nameElement);
 
