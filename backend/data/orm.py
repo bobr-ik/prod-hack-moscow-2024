@@ -10,6 +10,7 @@ import asyncio
 async def send_notification(debtor):
     chat_id = SyncORM.get_tg_id(debtor)
     await bot.send_message(chat_id = chat_id, text='Уведомление о добавлении долга')
+    return 
 
 
 class SyncORM:
@@ -232,13 +233,13 @@ class SyncORM:
     
     
     @staticmethod
-    def insert_debt(lender_tg, debtors_tg_debpt_dict, event_name):
+    async def insert_debt(lender_tg, debtors_tg_debpt_dict, event_name):
         asyncio.run(send_notification(debtor=debtor))
         with session_factory() as session:
             for debtor, amount in debtors_tg_debpt_dict:
                 create = DebtsHistoryORM(f_tg_tag_lender=lender_tg, f_tg_tag_debtor=debtor, f_debt_amount=amount, f_event_name=event_name)
                 session.add(create)
-                asyncio.run(send_notification(debtor=debtor))
+                await send_notification(debtor=debtor)
             session.commit()
     
     @staticmethod

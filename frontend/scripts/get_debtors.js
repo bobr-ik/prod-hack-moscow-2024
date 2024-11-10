@@ -1,7 +1,7 @@
 async function fetchDebtors() {
     data = window.Telegram.WebApp.initDataUnsafe
 console.log(data)
-    res = await fetch('http://158.160.85.97:5000/get_user_debtors?{data["user"]["username"]}')
+    res = await fetch(`http://158.160.85.97:5000/get_user_debtors?lender_tg=${data['user']['username']}`)
     res = await res.json();
     console.log(res);
     return res
@@ -26,7 +26,7 @@ function createCard(debtor) {
     payButton.addEventListener('click', () => {
         const targetCard = document.getElementById(`user-${debtor.debtor_tg}`);
         targetCard.style.display = 'none';
-        fetch('http://158.160.85.97:5000/remove_debt?lender_tg=' + lender.lenders_tg + '&debtor_tg=' + '@' +'data["user"]["username"]', {method: 'DELETE'});
+        fetch('http://158.160.85.97:5000/remove_debt?lender_tg=' + lender.lenders_tg + '&debtor_tg=' +`${data["user"]["username"]}`, {method: 'DELETE'});
     });
 
     card.appendChild(nameElement);
