@@ -32,17 +32,18 @@ services:
       - webnet
     env_file:
       - .env
+      
   
-  frontend:
-    build: ./frontend
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-    networks:
-      - webnet
-    env_file:
-      - .env
+  # frontend:
+  #   build: ./frontend
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - backend
+  #   networks:
+  #     - webnet
+  #   env_file:
+  #     - .env
   
 
 
