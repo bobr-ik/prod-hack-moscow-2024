@@ -2,7 +2,7 @@
         // Здесь  код для запроса к базе данных
         data = window.Telegram.WebApp.initDataUnsafe
 console.log(data)
-        res = await fetch('http://158.160.85.97:5000/get_user_lenders?${data["user"]["username"]}')
+        res = await fetch('http://158.160.85.97:5000/get_user_lenders?{data["user"]["username"]}')
         res = await res.json();
         console.log(res);
         return res

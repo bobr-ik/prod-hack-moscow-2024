@@ -81,9 +81,28 @@ h2{
     border-radius: 10px;
     font-size: 32px;
     border: 2px solid white;
-    width: 100px;
-    height: 40px;
-}
+    width: 150px;
+    height: 50px;
+    margin-top: 4px;
+    margin-left: 24%;
+    @media screen and (min-width:350px) {
+      margin-left: 25%;
+      
+    }
+    @media screen and (min-width:395px) {
+      margin-left: 30%;
+      
+    }
+    @media screen and (min-width:528px) {
+      margin-left: 35%;
+
+    }
+    @media screen and (min-width:680px) {
+      margin-left: 40%;
+      
+    }
+  }
+
 .dropbtn {
   background-color: #000000;
   color: white;
@@ -130,5 +149,44 @@ display: block;
 .name_of_user{
   font-size: 42px;
   font-weight: 700;
-  color: brown;
+  background-color: rgb(255, 220, 0);
+  border:0px;
+  border-radius: 10%;
+  width: 150px;
+  height: 70px;
 }
+.close_pay_button{
+  background-color: #aba8a8;
+  border-radius: 10%;
+  border: 0px;
+  width: 70px;
+  height: 35px;
+}
+.pay_button_new{
+  background-color: rgb(0, 0, 0);
+    border-radius: 10px;
+    font-size: 32px;
+    color: white;
+    border: 2px solid white;
+    width: 150px;
+    height: 50px;
+    margin-top: 4px;
+    margin-left: 24%;
+    @media screen and (min-width:350px) {
+      margin-left: 25%;
+      
+    }
+    @media screen and (min-width:395px) {
+      margin-left: 30%;
+      
+    }
+    @media screen and (min-width:528px) {
+      margin-left: 35%;
+
+    }
+    @media screen and (min-width:680px) {
+      margin-left: 40%;
+      
+    }
+  }
+
