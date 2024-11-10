@@ -22,7 +22,7 @@ function move_to_place(key) {
             window.location.href = "debtors.html";
             break;
         case 4:
-            window.location.href = "trip.html";
+            window.location.href = "groups.html";
             break;
     }
 }
