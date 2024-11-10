@@ -41,6 +41,11 @@ class TripDebtsORM(Base):
 
 class Tg_idsORM(Base):
     __tablename__ = "t_tg_ids"
+
+    def __init__(self, f_username, f_tg_id):
+        self.f_username = f_username
+        self.f_tg_id = f_tg_id
+
     fid: Mapped[int] = mapped_column(primary_key=True)
-    f_tg_id: Mapped[int] 
+    f_tg_id: Mapped[str] = mapped_column(String(50))
     f_username: Mapped[str] = mapped_column(String(50))
