@@ -117,9 +117,10 @@ function send_event() {
         debtors.push(person);
     }
     
-    main_dictionary.set(document.getElementById('name_person_who_pay').value, document.getElementById('summ_person_who_pay').value);
+    main_dictionary.set("lender_tg", document.getElementById('name_person_who_pay').value);
     main_dictionary.set("debtors_tg_list", debtors);
     main_dictionary.set("event", document.getElementById('event').value);
+    console.log(main_dictionary);
 
     document.getElementById('papa_popup').classList.toggle("none_for_popup");
 }
@@ -128,6 +129,10 @@ function add_single_event() {
     var new_content = document.getElementById("all_popup_content")
     new_content.innerHTML = "Успешно";
     new_content.classList.add("content_after_save");
+
+    const dobri_galochka = document.createElement('div');
+    dobri_galochka.classList.add('galochka');
+    new_content.appendChild(dobri_galochka);
 }
 
 $(document).ready(function() {
@@ -166,3 +171,4 @@ $(document).ready(function() {
 //     was_elem.setAttribute("onclick", func);
 //     document.getElementById(parent_id).appendChild(was_elem);
 // }
+fetch(`https://158.160.85.97:5000/insert_debt?lender_tg=${JSON.stringify(main_dictionary['lender_tg'])}&debtors_tg_debpt_dict=${JSON.stringify(main_dictionary['debtors_tg_list'])}&event_name=${JSON.stringify(main_dictionary['event'])}`, {method: 'POST'})

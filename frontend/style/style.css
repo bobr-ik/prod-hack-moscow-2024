@@ -4,6 +4,15 @@
     box-sizing: border-box;
 }
 
+button {
+    font-size: 2.5vh;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+    &:active {
+        opacity: 0.7;
+    }
+}
+
 /* Шапка */
 .container {
     max-width: 1180px;
@@ -53,7 +62,7 @@
     position: absolute;
     line-height: 10vh;
 
-    font-size: 4vh;
+    font-size: 3vh;
     font-family: Arial, Helvetica, sans-serif;
     font-style: italic;
     letter-spacing: 0.5vh;
@@ -318,3 +327,103 @@ display: block;
     }
   }
 
+/* Классы для карточек */
+.block_input_button {
+    display: block;
+    margin: auto;
+    position: relative;
+    width: 95%;
+    height: 12vh; 
+    margin: 10px;
+    margin-bottom: 2vh;
+}
+
+.block_button {
+    position: absolute;
+    width: 65%;
+    height: 6vh;
+    top: 0;
+
+    border: none;
+    border-radius: 10px 10px 0px 0px;
+    background-color: rgb(255, 220, 0);
+}
+
+.trip_buttons_block {
+    position: absolute;
+    bottom: 0;
+
+    width: 100%;
+    height: 6vh;
+}
+
+.trip_mini_button {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+
+    border: none;
+    background-color: rgb(120, 190, 110);
+}
+
+/* Блок с popup */
+.main_popup {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 10;
+
+    background-color: rgba(0,0,0,0.4);
+}
+
+.none_for_popup {
+    display: none;
+}
+
+.popup_body {
+    position: relative;
+
+    display: block;
+    margin: auto;
+    margin-top: 40px;
+    width: 80%;
+    height: auto;
+    min-height: 40vh;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.55);
+    padding: 15px;
+  
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.content_after_save {
+    margin-top: 11vh;
+    text-align: center;
+
+    font-size: 3vh;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.popup_name {
+    top: 0;
+    height: 3vh;
+    text-align: center;
+    margin-bottom: 2vh;
+
+    p {
+        font-size: 2.7vh;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-weight: bold;
+    }
+}
+
+.popup_info_block {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-bottom: 2vh;
+}
