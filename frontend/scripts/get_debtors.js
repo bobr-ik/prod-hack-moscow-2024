@@ -47,3 +47,11 @@ fetchDebtors().then(debtors => {
 }).catch(error => {
     console.error('Ошибка при получении данных: ', error);
 });
+
+$(document).ready(function() {
+    $('.header_burger').click(function(event) {
+        $(this).toggleClass('active');
+        $('.header_menu').toggleClass('active');
+        $('body').toggleClass('lock');
+    });
+});
