@@ -113,7 +113,6 @@ from data.orm import send_notification
 
 import multiprocessing
 
-# asyncio.run(send_notification('dak_dolka', 'test'))
 async def main():
     dp.include_router(rt)
     await dp.start_polling(bot)
