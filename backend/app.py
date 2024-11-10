@@ -5,6 +5,7 @@ from flasgger import Flasgger, swag_from, Swagger
 from aiogram import Dispatcher   
 import asyncio
 from bot.handlers import rt
+import ssl
 app = Flask(__name__)
 app.config["SWAGGER"] = {"title": "Мой API", "uiversion": 3}
 
@@ -120,6 +121,11 @@ def run_main():
     asyncio.run(main())
 
 if __name__ == '__main__':
-#    process = multiprocessing.Process(target=run_main)
- #   process.start()
-    app.run(host='0.0.0.0', port=5000)
+    process = multiprocessing.Process(target=run_main)
+    process.start()
+    context = ssl.SSLContext()
+    context.load_cert_chain(
+        certfile='./certs/example.crt',
+        keyfile='./private/example.key'
+    )
+    app.run(host='0.0.0.0', port=5000, ssl_context=context)

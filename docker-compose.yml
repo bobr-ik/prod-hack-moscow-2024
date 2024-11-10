@@ -26,23 +26,29 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: mysql+pymysql://bobr2:qwerty123@db/my_database
+      FLASK_APP: app.py
+      SSL_CERT_FILE: /etc/ssl/certs/example.crt
+      SSL_KEY_FILE: /etc/ssl/private/example.key
     ports:
       - "5000:5000"
     networks:
       - webnet
     env_file:
       - .env
+    volumes:
+      - ./certs:/etc/ssl/certs
+      
   
-  frontend:
-    build: ./frontend
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-    networks:
-      - webnet
-    env_file:
-      - .env
+  # frontend:
+  #   build: ./frontend
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - backend
+  #   networks:
+  #     - webnet
+  #   env_file:
+  #     - .env
   
 
 

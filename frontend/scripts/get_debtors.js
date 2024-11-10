@@ -1,7 +1,7 @@
 async function fetchDebtors() {
     data = window.Telegram.WebApp.initDataUnsafe
 console.log(data)
-    res = await fetch('http://158.160.30.88:5000/get_user_debtors?{data["user"]["username"]}')
+    res = await fetch('https://158.160.30.88:5005/get_user_debtors?{data["user"]["username"]}')
     res = await res.json();
     console.log(res);
     return res
