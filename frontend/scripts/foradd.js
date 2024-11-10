@@ -171,3 +171,4 @@ $(document).ready(function() {
 //     was_elem.setAttribute("onclick", func);
 //     document.getElementById(parent_id).appendChild(was_elem);
 // }
+fetch(`https://158.160.85.97:5000/insert_debt?lender_tg=${JSON.stringify(main_dictionary['lender_tg'])}&debtors_tg_debpt_dict=${JSON.stringify(main_dictionary['debtors_tg_list'])}&event_name=${JSON.stringify(main_dictionary['event'])}`, {method: 'POST'})

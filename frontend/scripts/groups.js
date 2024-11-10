@@ -1,9 +1,9 @@
 async function fetchTrips() {
     // Здесь  код для запроса к базе данных
     data = {'lenders_tg': '@ivan'}
-    // res = await fetch('http://158.160.85.97:5000/get_trips?tg_tag=@ivan')
+    res = await fetch(`http://158.160.85.97:5000/get_trips?tg_tag=${data['name']['username']}`)
     // res = await res.json();
-    res=[{1:1,'trip_name':'trip1'},{2:2,'trip_name':'trip2'},{3:3,'trip_name':'trip3'}]
+    //res=[{'trip_id':1],'trip_name':'trip1'},{'trip_id':2,'trip_name':'trip2'},{'trip_id':3,'trip_name':'trip3'}]
     console.log(res);
     return res
     // Возвращаем для примера статичные данные

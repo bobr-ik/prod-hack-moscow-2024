@@ -38,10 +38,8 @@ def get_user_debtors():
 @app.route('/get_user_lenders', methods=['GET'])
 @swag_from('swagger/get_user_lenders.yaml')
 def get_user_lenders():
-    print('aaaa')
     debtor_tg = request.args.get('debtor_tg')
-    print('aaaa')
-    return jsonify(SyncORM.get_user_lenders(debtor_tg))
+    return jsonify(asyncio.run(SyncORM.get_user_lenders(debtor_tg)))
 
 @app.route('/insert_debt', methods=['POST'])
 @swag_from('swagger/insert_debt.yaml')
@@ -109,7 +107,6 @@ def close_trip():
 
 dp = Dispatcher()
 from bot.dop import bot
-from data.orm import send_notification
 
 import multiprocessing
 
@@ -121,6 +118,6 @@ def run_main():
     asyncio.run(main())
 
 if __name__ == '__main__':
-    process = multiprocessing.Process(target=run_main)
-    process.start()
+#    process = multiprocessing.Process(target=run_main)
+ #   process.start()
     app.run(host='0.0.0.0', port=5000)

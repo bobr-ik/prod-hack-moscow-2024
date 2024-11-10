@@ -56,5 +56,8 @@ class TestORM(unittest.TestCase):
         self.assertEqual(list(SyncORM.get_trip_user_debtors('@petr', 1)[1][0].values())[0], 75)
         self.assertEqual(len(SyncORM.get_trip_user_debtors('@petr', 1)[1]), 2)
 
+    # def test_get_tg_id(self):
+    #     self.assertEqual(SyncORM.get_tg_id('dak_dolka'), 2147483647)
+
 if __name__ == '__main__':
     unittest.main()

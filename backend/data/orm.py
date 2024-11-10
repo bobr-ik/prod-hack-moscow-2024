@@ -4,6 +4,14 @@ from data.models import DebtsHistoryORM, TripsORM, TripDebtsORM, Tg_idsORM
 from datetime import datetime, timezone
 from bot.dop import bot
 from aiogram.exceptions import TelegramBadRequest
+import asyncio
+
+
+async def send_notification(debtor):
+    chat_id = SyncORM.get_tg_id(debtor)
+    await bot.send_message(chat_id = chat_id, text='Уведомление о добавлении долга')
+    return 
+
 
 class SyncORM:
     @staticmethod
@@ -225,12 +233,13 @@ class SyncORM:
     
     
     @staticmethod
-    def insert_debt(lender_tg, debtors_tg_debpt_dict, event_name):
+    async def insert_debt(lender_tg, debtors_tg_debpt_dict, event_name):
+        asyncio.run(send_notification(debtor=debtor))
         with session_factory() as session:
             for debtor, amount in debtors_tg_debpt_dict:
                 create = DebtsHistoryORM(f_tg_tag_lender=lender_tg, f_tg_tag_debtor=debtor, f_debt_amount=amount, f_event_name=event_name)
                 session.add(create)
-                send_notification(debtor=debtor, lender_tg=lender_tg, event_name=event_name)
+                await send_notification(debtor=debtor)
             session.commit()
     
     @staticmethod
@@ -299,13 +308,9 @@ class SyncORM:
     @staticmethod
     def add_tg_id(username, tg_id):
         with session_factory() as session:
-            create = [
-            {
-                "f_tg_id": f"{tg_id}",
-                "f_username": f"{username}"
-            }]
-            insert_data = insert(Tg_idsORM).values(create)
-            session.execute(insert_data)
+            insert_data = Tg_idsORM(username, tg_id)
+            print(insert_data.f_username, insert_data.f_tg_id)
+            session.add(insert_data)
             session.commit()
 
     @staticmethod
@@ -313,13 +318,6 @@ class SyncORM:
         with session_factory() as session:
             res = session.execute(select(Tg_idsORM.f_tg_id).where(Tg_idsORM.f_username == username)).scalars().all()
             return res[0]
-
-async def send_notification(debtor, text):
-    try:
-        chat_id = SyncORM.get_tg_id(debtor)
-        await bot.send_message(chat_id=int(chat_id), text=text)
-    except TelegramBadRequest as e:
-        print(f"Error: {e}")
 
     
     
