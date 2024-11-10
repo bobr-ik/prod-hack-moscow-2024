@@ -6,7 +6,13 @@ var flag = 0;
 var main_person_name = 0;
 var main_person_summ = 0;
 
-function get_info(value) {
+async function fetchDebtors(tg_id) {
+    //user trips 
+    res = await fetch(`http://158.160.85.97:5000/get_trips?lender_tg=${tg_id}`);
+    return res;
+}
+
+async function get_info(value) {
     switch (value) {
         case 1:
             const ivent_name = document.getElementById('event').value;
@@ -30,7 +36,7 @@ function get_info(value) {
 
 var singles;
 
-function get_summ() {
+async function get_summ() {
     var persons = document.getElementsByClassName('check');
     singles = 0;
     general_summ = save_general_summ;
@@ -52,8 +58,8 @@ function get_summ() {
     }
 }
 
-function add_person() {
-    get_summ(); //Обновляем сумму
+async function add_person() {
+    await get_summ(); //Обновляем сумму
     if (flag != 1) {
         const person_block = document.createElement('div');
         person_block.classList.add("style_person_block");
@@ -97,7 +103,7 @@ function add_person() {
     }
 }
 
-function update_event() {
+async function update_event() {
     var array = document.getElementsByClassName('check');
     for (i = 0; i < array.length; i++) {
         if (array[i].value == "") {
@@ -106,9 +112,11 @@ function update_event() {
     }
 }
 
-function send_event() {
+async function send_event() {
     var persons_name = document.getElementsByClassName('style_person_name');
     var persons_summ = document.getElementsByClassName('style_person_summ');
+    
+    await fetch_debtors(document.getElementById('name_person_who_pay').value);
 
     for (i = 0; i < persons_name.length; i++) {
         var person = new Map();
@@ -125,7 +133,7 @@ function send_event() {
     document.getElementById('papa_popup').classList.toggle("none_for_popup");
 }
 
-function add_single_event() {
+async function add_single_event() {
     var new_content = document.getElementById("all_popup_content")
     new_content.innerHTML = "Успешно";
     new_content.classList.add("content_after_save");
@@ -133,24 +141,47 @@ function add_single_event() {
     const dobri_galochka = document.createElement('div');
     dobri_galochka.classList.add('galochka');
     new_content.appendChild(dobri_galochka);
+    fetch('https://158.160.85.97:5000/insert_debt', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'  // Устанавливаем заголовок для JSON
+        },
+        body: JSON.stringify({
+          lender_tg: main_dictionary['lender_tg'],
+          debtors_tg_debt_dict: main_dictionary['debtors_tg_list'],
+          event_name: main_dictionary['event']
+        })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);  // Работа с данными ответа
+      })
+      .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);  // Обработка ошибок
+      });
 }
 
-$(document).ready(function() {
-    $('.header_burger').click(function(event) {
+$(document).ready(async function() {
+    $('.header_burger').click(async function(event) {
         $(this).toggleClass('active');
         $('.header_menu').toggleClass('active');
         $('body').toggleClass('lock');
     });
 });
 
-// function add_payment() {
+// async function add_payment() {
 //     document.getElementById("button_who_pay").remove();
 
 //     const person_pay = document.createElement('input');
 //     person_pay.id = "input_person_who_pay";
 //     person_pay.classList.add("input_class");
 //     person_pay.setAttribute("value", "@");
-//     person_pay.onchange = () => get_info(3);
+//     person_pay.onchange = () => await get_info(3);
 //     document.getElementById("who_pay").appendChild(person_pay);
 
 //     const cansel_add = document.createElement('button');
@@ -160,7 +191,7 @@ $(document).ready(function() {
 //     document.getElementById("who_pay").appendChild(cansel_add);
 // }
 
-// function remove_changes(remove_id, return_elem, elem_id, parent_id, text, func) {
+// async function remove_changes(remove_id, return_elem, elem_id, parent_id, text, func) {
 //     document.getElementById(remove_id).remove();
 //     document.getElementById("cancel_add").remove();
     
@@ -171,4 +202,3 @@ $(document).ready(function() {
 //     was_elem.setAttribute("onclick", func);
 //     document.getElementById(parent_id).appendChild(was_elem);
 // }
-fetch(`https://158.160.85.97:5000/insert_debt?lender_tg=${JSON.stringify(main_dictionary['lender_tg'])}&debtors_tg_debpt_dict=${JSON.stringify(main_dictionary['debtors_tg_list'])}&event_name=${JSON.stringify(main_dictionary['event'])}`, {method: 'POST'})
